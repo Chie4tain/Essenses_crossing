@@ -62,6 +62,8 @@
             LblSetMAllele1 = new Label();
             LbSetMother = new Label();
             LbSetFather = new Label();
+            PbMotherIcon = new PictureBox();
+            PbFatherIcon = new PictureBox();
             PnMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)PbImagesOfChildren).BeginInit();
             PnlSettings.SuspendLayout();
@@ -69,6 +71,8 @@
             GbMAllele1.SuspendLayout();
             GbFAllele2.SuspendLayout();
             GbFAllele1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)PbMotherIcon).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)PbFatherIcon).BeginInit();
             SuspendLayout();
             // 
             // BtStart
@@ -147,6 +151,8 @@
             // 
             // PnMain
             // 
+            PnMain.Controls.Add(PbFatherIcon);
+            PnMain.Controls.Add(PbMotherIcon);
             PnMain.Controls.Add(LblMother);
             PnMain.Controls.Add(PbImagesOfChildren);
             PnMain.Controls.Add(LblMothergen);
@@ -163,7 +169,7 @@
             // 
             // PbImagesOfChildren
             // 
-            PbImagesOfChildren.Location = new Point(9, 223);
+            PbImagesOfChildren.Location = new Point(9, 209);
             PbImagesOfChildren.Name = "PbImagesOfChildren";
             PbImagesOfChildren.Size = new Size(656, 263);
             PbImagesOfChildren.TabIndex = 8;
@@ -449,6 +455,22 @@
             LbSetFather.TabIndex = 8;
             LbSetFather.Text = "Father";
             // 
+            // PbMotherIcon
+            // 
+            PbMotherIcon.Location = new Point(433, 7);
+            PbMotherIcon.Name = "PbMotherIcon";
+            PbMotherIcon.Size = new Size(68, 50);
+            PbMotherIcon.TabIndex = 9;
+            PbMotherIcon.TabStop = false;
+            // 
+            // PbFatherIcon
+            // 
+            PbFatherIcon.Location = new Point(80, 6);
+            PbFatherIcon.Name = "PbFatherIcon";
+            PbFatherIcon.Size = new Size(68, 50);
+            PbFatherIcon.TabIndex = 10;
+            PbFatherIcon.TabStop = false;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -456,7 +478,10 @@
             ClientSize = new Size(680, 503);
             Controls.Add(PnMain);
             Controls.Add(PnlSettings);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "Main";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             PnMain.ResumeLayout(false);
             PnMain.PerformLayout();
@@ -471,6 +496,8 @@
             GbFAllele2.PerformLayout();
             GbFAllele1.ResumeLayout(false);
             GbFAllele1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)PbMotherIcon).EndInit();
+            ((System.ComponentModel.ISupportInitialize)PbFatherIcon).EndInit();
             ResumeLayout(false);
         }
 
@@ -510,5 +537,7 @@
         private GroupBox GbMAllele1;
         private GroupBox GbFAllele2;
         private GroupBox GbFAllele1;
+        private PictureBox PbFatherIcon;
+        private PictureBox PbMotherIcon;
     }
 }

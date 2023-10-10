@@ -1,3 +1,5 @@
+using System.Drawing.Text;
+
 namespace Essenses_crossing
 {
     public enum Sex { Male, Female };
@@ -6,21 +8,21 @@ namespace Essenses_crossing
 
     public partial class Main : Form
     {
-        public string[] Male_names = { "Barsick", "Tuzik", "Zhuzhik", "Pup", "GigaChad", "sharp", "shults", "garik", "bulgum" };
-        public string[] Female_names = { "Misca", "Phimka", "Busa", "Pupa", "Omega", "princess", "Murka", "Zhuchka", "Kapa" };
 
-        public Animal father;
-        public Animal mother;
+        public Animal_tertiary Father;
+        public Animal_tertiary Mother;
+        private Point _CurrentPositionPoint = new Point(4,4);
+        private int size = 45;
 
-        List<Animal> offspring;
+        List<Essence> _offspring;
 
         public int Offspringnumber;
         public Main()
         {
             InitializeComponent();
 
-            father = new Animal("Murzik", Sex.Male);
-            mother = new Animal("Buska", Sex.Female);
+            Father = new Animal_tertiary("Murzik", Sex.Male);
+            Mother = new Animal_tertiary("Buska", Sex.Female);
 
             Offspringnumber = 10;
             SetLabelValues();
@@ -28,39 +30,13 @@ namespace Essenses_crossing
 
         private void SetLabelValues()
         {
-            LblMothername.Text = $"Name: {mother.Name}";
-            LblMothergen.Text += $"{mother.Genotype.ToString(mother.Genotype.allele1)} ";
-            LblMothergen.Text += $" {mother.Genotype.ToString(mother.Genotype.allele2)}";
+            LblMothername.Text = $"Name: {Mother.Name}";
+            LblMothergen.Text += $"{Mother.Genotype.ToString(Mother.Genotype.allele1)} ";
+            LblMothergen.Text += $" {Mother.Genotype.ToString(Mother.Genotype.allele2)}";
 
-            LblFathername.Text = $"Name: {father.Name}";
-            LblFathergen.Text += $"{father.Genotype.ToString(father.Genotype.allele1)} ";
-            LblFathergen.Text += $" {father.Genotype.ToString(father.Genotype.allele2)}";
-        }
-
-        private List<Animal> GenerateOffspring()
-        {
-            offspring = new List<Animal>();
-
-            Random random = new();
-            string name = "";
-            Sex sex = new();
-
-            for (int i = 1; i <= Offspringnumber; ++i)
-            {
-                sex = EnumHandler.GetRandomValue<Sex>();
-                if (sex == Sex.Male)
-                {
-                    name = Male_names[random.Next(Male_names.Length)];
-                }
-                else
-                {
-                    name = Female_names[random.Next(Male_names.Length)];
-                }
-                Animal animal = new(name, sex);
-                offspring.Add(animal);
-            }
-
-            return offspring;
+            LblFathername.Text = $"Name: {Father.Name}";
+            LblFathergen.Text += $"{Father.Genotype.ToString(Father.Genotype.allele1)} ";
+            LblFathergen.Text += $" {Father.Genotype.ToString(Father.Genotype.allele2)}";
         }
 
         private void SetRadioButtons(RadioButton dominantRadioButton, RadioButton recessiveRadioButton, Allele allele)
@@ -75,68 +51,65 @@ namespace Essenses_crossing
 
             if (Enum.TryParse(radioButton.Tag as string, out Allele allele))
             {
-
                 if (radioButton.Name.StartsWith("RbFatherAllele1"))
                 {
-                    father.Genotype.allele1 = allele;
+                    Father.Genotype.allele1 = allele;
                 }
                 else if (radioButton.Name.StartsWith("RbFatherAllele2"))
                 {
-                    father.Genotype.allele2 = allele;
+                    Father.Genotype.allele2 = allele;
                 }
                 else if (radioButton.Name.StartsWith("RbMotherAllele1"))
                 {
-                    mother.Genotype.allele1 = allele;
+                    Mother.Genotype.allele1 = allele;
                 }
                 else if (radioButton.Name.StartsWith("RbMotherAllele2"))
                 {
-                    mother.Genotype.allele2 = allele;
+                    Mother.Genotype.allele2 = allele;
                 }
             }
         }
 
         private void BtOffspringSetNumber_Click(object sender, EventArgs e)
         {
-            setNumberOffspring((Button)sender);
+            SetNumberOffspring((Button)sender);
         }
 
-        private void setNumberOffspring(Button btn)
+        private void SetNumberOffspring(Button btn)
         {
             Offspringnumber = Convert.ToInt32(btn.Tag);
         }
 
-        private void DrawOffspring()
+        private void OffsetCurrentPositionPoint()
         {
-            PbImagesOfChildren.Controls.Clear();
-
-            int x = 20;
-            int y = 20;
-
-            foreach (Animal child in offspring)
+            _CurrentPositionPoint.X += size + 10;
+            if (_CurrentPositionPoint.X + size > PbImagesOfChildren.Width)
             {
-                child.EssensePhenotype.Draw(PbImagesOfChildren.CreateGraphics(), new Point(x, y), 30);
-
-                Label nameLabel = new();
-                nameLabel.Text = child.Name;
-                nameLabel.Location = new Point(x, y + 35);
-                nameLabel.AutoSize = true;
-
-                PbImagesOfChildren.Controls.Add(nameLabel);
-
-                x += 60;
-                if (x > PbImagesOfChildren.Width - 40)
-                {
-                    x = 20;
-                    y += 70;
-                }
+                _CurrentPositionPoint.X = 10;
+                _CurrentPositionPoint.Y += size + 10;
             }
+        }
+
+        private void ResetCurrentPositionPoint()
+        {
+            
+            _CurrentPositionPoint.X = 4;
+            _CurrentPositionPoint.Y = 4;
         }
 
         private void BtStart_Click(object sender, EventArgs e)
         {
-            GenerateOffspring();
+            _offspring = Father.Breed(Mother, Offspringnumber);
 
-            DrawOffspring();
+            Father.Draw(PbFatherIcon, new Point(4,4), size);
+            Mother.Draw(PbMotherIcon, new Point(4, 4), size);
+
+            foreach (var child in _offspring)
+            {
+                child.Draw(PbImagesOfChildren, _CurrentPositionPoint, size);
+                OffsetCurrentPositionPoint();
+            }
+            ResetCurrentPositionPoint();
         }
 
         private void BtSettings_Click(object sender, EventArgs e)
@@ -144,11 +117,11 @@ namespace Essenses_crossing
             PnlSettings.Visible = true;
             PnMain.Visible = false;
 
-            SetRadioButtons(RbFatherAllele1Dominant, RbFatherAllele1Recessive, father.Genotype.allele1);
-            SetRadioButtons(RbFatherAllele2Dominant, RbFatherAllele2Recessive, father.Genotype.allele2);
+            SetRadioButtons(RbFatherAllele1Dominant, RbFatherAllele1Recessive, Father.Genotype.allele1);
+            SetRadioButtons(RbFatherAllele2Dominant, RbFatherAllele2Recessive, Father.Genotype.allele2);
 
-            SetRadioButtons(RbMotherAllele1Dominant, RbMotherAllele1Recessive, mother.Genotype.allele1);
-            SetRadioButtons(RbMotherAllele2Dominant, RbMotherAllele2Recessive, mother.Genotype.allele2);
+            SetRadioButtons(RbMotherAllele1Dominant, RbMotherAllele1Recessive, Mother.Genotype.allele1);
+            SetRadioButtons(RbMotherAllele2Dominant, RbMotherAllele2Recessive, Mother.Genotype.allele2);
         }
 
         private void BtSetSettings_Click(object sender, EventArgs e)
@@ -160,10 +133,13 @@ namespace Essenses_crossing
             LblMothergen.Text = "Mother's Genotype: ";
             SetLabelValues();
         }
+
     }
 
     public static class EnumHandler
     {
+        public static string[] male_names = { "Barsick", "Tuzik", "Zhuzhik", "Pup", "GigaChad", "Sharp", "Shults", "Garik", "Bulgum" };
+        public static string[] female_names = { "Misca", "Phimka", "Busa", "Pupa", "Omega", "Princess", "Murka", "Zhuchka", "Kapa" };
         public static int GetSize<T>() where T : Enum
         {
             return Enum.GetValues(typeof(T)).Length;
@@ -209,11 +185,9 @@ namespace Essenses_crossing
         public Allele allele1;
         public Allele allele2;
 
-        public static readonly int alleleSize = EnumHandler.GetSize<Allele>();
-
         private string _name;
 
-        bool Dominant
+        public bool Dominant
         {
             get { return allele1 == Allele.Dominant || allele2 == Allele.Dominant; }
         }
@@ -249,6 +223,7 @@ namespace Essenses_crossing
         public Color FillColor { get; set; }
         public float LineWidth { get; set; }
 
+        private Point _currentPositionPoint = new Point(10, 10);
         public Phenotype()
         {
             Shape = Shapes.Circle;
@@ -298,7 +273,7 @@ namespace Essenses_crossing
         }
     }
 
-    public abstract class Essense
+    public abstract class Essence
     {
         private string _name;
 
@@ -308,17 +283,51 @@ namespace Essenses_crossing
             set { _name = (value != string.Empty) ? value : "Barsick"; }
         }
         public Sex sex { get; set; }
-        public Phenotype EssensePhenotype { get; set; }
+        public Phenotype EssencePhenotype { get; set; }
 
-        public Essense(string name, Sex p_sex)
+        public Essence(string name, Sex pSex)
         {
             Name = name;
-            sex = p_sex;
-            EssensePhenotype = new Phenotype((sex == Sex.Male) ? Shapes.Triangle : Shapes.Circle);
+            sex = pSex;
+            EssencePhenotype = new Phenotype((sex == Sex.Male) ? Shapes.Triangle : Shapes.Circle);
+        }
+
+        public void Draw(Control control, Point point, int size)
+        {
+            Graphics graphic = control.CreateGraphics();
+            EssencePhenotype.Draw(graphic, point, size);
+        }
+
+        protected virtual Essence Child(Essence partner, string name, Sex pSex)
+        {
+            return null;
+        }
+
+        public List<Essence> Breed(Essence partner, int count)
+        {
+            List<Essence> Children = new List<Essence>();
+            Random random = new();
+            string name = "";
+            Sex sex = new();
+            for (int i = 0; i < count; i++)
+            {
+                sex = EnumHandler.GetRandomValue<Sex>();
+                if (sex == Sex.Male)
+                {
+                    name = EnumHandler.male_names[random.Next(EnumHandler.male_names.Length)];
+                }
+                else
+                {
+                    name = EnumHandler.female_names[random.Next(EnumHandler.male_names.Length)];
+                }
+                Essence child = this.Child(partner, name, sex);
+                Children.Add(child);
+            }
+            return Children;
         }
     }
 
-    public class Animal : Essense
+    public class Animal : Essence
     {
         public Gene Genotype { get; set; }
 
@@ -326,20 +335,134 @@ namespace Essenses_crossing
         {
             Random random = new();
 
-            Allele allele1 = EnumHandler.GetRandomValue<Allele>();
-            Allele allele2 = EnumHandler.GetRandomValue<Allele>();
-
-            Genotype = new Gene(allele1, allele2, name);
+            Genotype = new Gene(EnumHandler.GetRandomValue<Allele>(), EnumHandler.GetRandomValue<Allele>(), name);
         }
 
-        public Animal(string name, Sex sex, Allele allele1) : base(name, sex)
+        public Animal(string name, Sex sex, Gene genotype) : base(name, sex)
         {
-            Genotype = new Gene(allele1, allele1, name);
+            Genotype = genotype;
+            EssencePhenotype.LineWidth = Genotype.Dominant ? 4 : 1;
         }
 
-        public Animal(string name, Sex sex, Allele allele1, Allele allele2) : base(name, sex)
+        protected virtual Essence Child(Essence partner, string name, Sex sex)
         {
-            Genotype = new Gene(allele1, allele2, name);
+            Gene childGen = this.Genotype + (partner as Animal).Genotype;
+            Essence child = new Animal(name, sex, childGen);
+            return child;
+        }
+
+        public List<Essence> Breed(Essence partner, int count)
+        {
+            List<Essence> Children = new List<Essence>();
+            Random random = new();
+            string name = "";
+            Sex sex = new();
+            for (int i = 0; i < count; i++)
+            {
+                sex = EnumHandler.GetRandomValue<Sex>();
+                if (sex == Sex.Male)
+                {
+                    name = EnumHandler.male_names[random.Next(EnumHandler.male_names.Length)];
+                }
+                else
+                {
+                    name = EnumHandler.female_names[random.Next(EnumHandler.male_names.Length)];
+                }
+                Essence child = this.Child(partner, name, sex);
+                Children.Add(child);
+            }
+            return Children;
+        }
+    }
+
+    public class Animal_secondary : Animal
+    {
+        private Gene Genotype { get; set; }
+
+        public Animal_secondary(string name, Sex sex) : base(name, sex)
+        {
+            Random random = new();
+
+            Genotype = new Gene(EnumHandler.GetRandomValue<Allele>(), EnumHandler.GetRandomValue<Allele>(), name);
+        }
+        public Animal_secondary(string name, Sex sex, Gene genotype) : base(name, sex, genotype)
+        {
+            Genotype = genotype;
+            EssencePhenotype.FillColor = Genotype.Dominant ? Color.DarkOrchid : Color.Tomato;
+        }
+
+        protected virtual Essence Child(Essence partner, string name, Sex sex)
+        {
+            Gene childGen = this.Genotype + (partner as Animal_secondary).Genotype;
+            Essence child = new Animal_secondary(name, sex, childGen);
+            return child;
+        }
+        public List<Essence> Breed(Essence partner, int count)
+        {
+            List<Essence> Children = new List<Essence>();
+            Random random = new();
+            string name = "";
+            Sex sex = new();
+            for (int i = 0; i < count; i++)
+            {
+                sex = EnumHandler.GetRandomValue<Sex>();
+                if (sex == Sex.Male)
+                {
+                    name = EnumHandler.male_names[random.Next(EnumHandler.male_names.Length)];
+                }
+                else
+                {
+                    name = EnumHandler.female_names[random.Next(EnumHandler.male_names.Length)];
+                }
+                Essence child = this.Child(partner, name, sex);
+                Children.Add(child);
+            }
+            return Children;
+        }
+    }
+
+    public class Animal_tertiary : Animal_secondary
+    {
+        private Gene Genotype { get; set; }
+
+        public Animal_tertiary(string name, Sex sex) : base(name, sex)
+        {
+            Random random = new();
+
+            Genotype = new Gene(EnumHandler.GetRandomValue<Allele>(), EnumHandler.GetRandomValue<Allele>(), name);
+        }
+        public Animal_tertiary(string name, Sex sex, Gene genotype) : base(name, sex, genotype)
+        {
+            Genotype = genotype;
+            EssencePhenotype.LineColor = Genotype.Dominant ? Color.SpringGreen : Color.Gold;
+        }
+        protected virtual Essence Child(Essence partner, string name, Sex sex)
+        {
+            Gene childGen = this.Genotype + (partner as Animal_tertiary).Genotype;
+            Essence child = new Animal_tertiary(name, sex, childGen);
+            return child;
+        }
+        public List<Essence> Breed(Essence partner, int count)
+        {
+            List<Essence> Children = new List<Essence>();
+            Random random = new();
+            string name = "";
+            Sex sex = new();
+            for (int i = 0; i < count; i++)
+            {
+                sex = EnumHandler.GetRandomValue<Sex>();
+                if (sex == Sex.Male)
+                {
+                    name = EnumHandler.male_names[random.Next(EnumHandler.male_names.Length)];
+                }
+                else
+                {
+                    name = EnumHandler.female_names[random.Next(EnumHandler.male_names.Length)];
+                }
+                Essence child = this.Child(partner, name, sex);
+                Children.Add(child);
+            }
+            return Children;
         }
     }
 }
