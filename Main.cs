@@ -8,10 +8,9 @@ namespace Essenses_crossing
 
     public partial class Main : Form
     {
-
         public Animal_tertiary Father;
         public Animal_tertiary Mother;
-        private Point _CurrentPositionPoint = new Point(4,4);
+        private Point _CurrentPositionPoint = new Point(2,2);
         private int size = 45;
 
         List<Essence> _offspring;
