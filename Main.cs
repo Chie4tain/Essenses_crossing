@@ -39,7 +39,7 @@ namespace Essenses_crossing
             Offspringnumber = 10;
             SetLabelValues();
 
-            Vsbar.Size = new Size(Vsbar.Width, this.Height);
+            numUDOffspingCount.Value = Offspringnumber;
 
             _CurrentPositionPoint = new Point(2, 2);
         }
@@ -47,11 +47,13 @@ namespace Essenses_crossing
 
         private void UpdateFather()
         {
+            PbFatherIcon.Refresh();
             Father = CreateParent(FlpControlFather, Sex.Male, GroupBoxListsFather);
             Father.Draw(PbFatherIcon, new Point(4, 4), Essence.size);
         }
         private void UpdateMother()
         {
+            PbFatherIcon.Refresh();
             Mother = CreateParent(FlpControlMother, Sex.Female, GroupBoxListsMother);
             Mother.Draw(PbMotherIcon, new Point(4, 4), Essence.size);
         }
@@ -146,8 +148,6 @@ namespace Essenses_crossing
 
                 if (_CurrentPositionPoint.Y + Essence.size + 20 + (10 * Essence.size / 100) > PbImagesOfChildren.Height)
                 {
-                    PnMain.Size = new Size(PnMain.Width,
-                        PnMain.Height + 2 * Essence.size + 20 + (10 * Essence.size / 100));
                     PbImagesOfChildren.Size = new Size(PbImagesOfChildren.Width, PbImagesOfChildren.Height + 2 * Essence.size + 20 + (10 * Essence.size / 100));
                 }
             }
@@ -207,14 +207,9 @@ namespace Essenses_crossing
             }
         }
 
-        private void TimerInvalidate_Tick_1(object sender, EventArgs e)
+        private void nUDChildrenCount_ValueChanged(object sender, EventArgs e)
         {
-            PbImagesOfChildren.Invalidate();
-        }
-
-        private void TbarOffspringCount_ValueChanged(object sender, EventArgs e)
-        {
-            Offspringnumber = TbarOffspringCount.Value;
+            Offspringnumber = (int)numUDOffspingCount.Value;
         }
     }
 

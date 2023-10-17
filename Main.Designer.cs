@@ -41,14 +41,13 @@
             PbFatherIcon = new PictureBox();
             PbMotherIcon = new PictureBox();
             PnlSettings = new Panel();
-            TbarOffspringCount = new TrackBar();
+            numUDOffspingCount = new NumericUpDown();
             FlpControlMother = new FlowLayoutPanel();
             LbOffspring = new Label();
             FlpControlFather = new FlowLayoutPanel();
             BtSetSettings = new Button();
             LbSetMother = new Label();
             LbSetFather = new Label();
-            Vsbar = new VScrollBar();
             TimerInvalidate = new System.Windows.Forms.Timer(components);
             PnMain.SuspendLayout();
             pnlChildren.SuspendLayout();
@@ -56,7 +55,7 @@
             ((System.ComponentModel.ISupportInitialize)PbFatherIcon).BeginInit();
             ((System.ComponentModel.ISupportInitialize)PbMotherIcon).BeginInit();
             PnlSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)TbarOffspringCount).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numUDOffspingCount).BeginInit();
             SuspendLayout();
             // 
             // BtStart
@@ -167,7 +166,7 @@
             // 
             // PnlSettings
             // 
-            PnlSettings.Controls.Add(TbarOffspringCount);
+            PnlSettings.Controls.Add(numUDOffspingCount);
             PnlSettings.Controls.Add(FlpControlMother);
             PnlSettings.Controls.Add(LbOffspring);
             PnlSettings.Controls.Add(FlpControlFather);
@@ -180,17 +179,13 @@
             PnlSettings.TabIndex = 8;
             PnlSettings.Visible = false;
             // 
-            // TbarOffspringCount
+            // numUDOffspingCount
             // 
-            TbarOffspringCount.Location = new Point(237, 340);
-            TbarOffspringCount.Maximum = 100;
-            TbarOffspringCount.Minimum = 1;
-            TbarOffspringCount.Name = "TbarOffspringCount";
-            TbarOffspringCount.Size = new Size(535, 56);
-            TbarOffspringCount.TabIndex = 28;
-            TbarOffspringCount.TickStyle = TickStyle.Both;
-            TbarOffspringCount.Value = 1;
-            TbarOffspringCount.ValueChanged += TbarOffspringCount_ValueChanged;
+            numUDOffspingCount.Location = new Point(237, 344);
+            numUDOffspingCount.Name = "numUDOffspingCount";
+            numUDOffspingCount.Size = new Size(535, 27);
+            numUDOffspingCount.TabIndex = 29;
+            numUDOffspingCount.ValueChanged += nUDChildrenCount_ValueChanged;
             // 
             // FlpControlMother
             // 
@@ -204,7 +199,7 @@
             // 
             LbOffspring.AutoSize = true;
             LbOffspring.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            LbOffspring.Location = new Point(9, 303);
+            LbOffspring.Location = new Point(237, 299);
             LbOffspring.Name = "LbOffspring";
             LbOffspring.Size = new Size(194, 28);
             LbOffspring.TabIndex = 21;
@@ -248,33 +243,15 @@
             LbSetFather.TabIndex = 8;
             LbSetFather.Text = "Father";
             // 
-            // Vsbar
-            // 
-            Vsbar.Enabled = false;
-            Vsbar.LargeChange = 100;
-            Vsbar.Location = new Point(1184, 5);
-            Vsbar.Maximum = 1000;
-            Vsbar.Name = "Vsbar";
-            Vsbar.Size = new Size(28, 606);
-            Vsbar.SmallChange = 10;
-            Vsbar.TabIndex = 11;
-            Vsbar.Visible = false;
-            // 
-            // TimerInvalidate
-            // 
-            TimerInvalidate.Interval = 1000;
-            TimerInvalidate.Tick += TimerInvalidate_Tick_1;
-            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
             AutoScrollMinSize = new Size(700, 500);
-            ClientSize = new Size(999, 653);
-            Controls.Add(Vsbar);
-            Controls.Add(PnlSettings);
+            ClientSize = new Size(999, 530);
             Controls.Add(PnMain);
+            Controls.Add(PnlSettings);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             Name = "Main";
@@ -288,7 +265,7 @@
             ((System.ComponentModel.ISupportInitialize)PbMotherIcon).EndInit();
             PnlSettings.ResumeLayout(false);
             PnlSettings.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)TbarOffspringCount).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numUDOffspingCount).EndInit();
             ResumeLayout(false);
         }
 
@@ -327,9 +304,8 @@
         private Button button1;
         private FlowLayoutPanel flowLayoutPanel1;
         private FlowLayoutPanel flowLayoutPanel2;
-        private VScrollBar Vsbar;
         private System.Windows.Forms.Timer TimerInvalidate;
-        private TrackBar TbarOffspringCount;
         private Panel pnlChildren;
+        private NumericUpDown numUDOffspingCount;
     }
 }
