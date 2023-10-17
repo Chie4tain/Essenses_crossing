@@ -14,25 +14,18 @@ namespace Essenses_crossing
 
     public partial class Main : Form
     {
-        public Animal Father;
-        public Animal Mother;
+        public Essence Father;
+        public Essence Mother;
         public int Offspringnumber;
 
         public List<Essence> offspring;
         public List<GroupBoxList> GroupBoxListsFather = new List<GroupBoxList>();
         public List<GroupBoxList> GroupBoxListsMother = new List<GroupBoxList>();
 
-        public readonly List<string> attrNames = new List<string>() { "LineWidth", "LineColor", "FillColor" };
+        public readonly List<string> attrNames = new List<string>() { "LineWidth", "FillColor", "LineColor" };
         public readonly List<string> AlleleNames = new List<string>() { "Allele 1", "Allele 2" };
 
         private Point _CurrentPositionPoint;
-
-        //private GroupBox[] groupBoxes = new GroupBox[3];
-        //private CheckBox[] CheckBoxes = new CheckBox[3];
-
-        //private Bitmap PictureBoxBuffer;
-
-        private int scrollPosition = 0;
 
         public Main()
         {
@@ -41,7 +34,7 @@ namespace Essenses_crossing
             CreateGenesControls(FlpControlFather);
             UpdateFather();
             CreateGenesControls(FlpControlMother);
-            UpddateMother();
+            UpdateMother();
 
             Offspringnumber = 10;
             SetLabelValues();
@@ -56,16 +49,14 @@ namespace Essenses_crossing
         {
             Father = CreateParent(FlpControlFather, Sex.Male, GroupBoxListsFather);
             Father.Draw(PbFatherIcon, new Point(4, 4), Essence.size);
-            Invalidate();
         }
-        private void UpddateMother()
+        private void UpdateMother()
         {
             Mother = CreateParent(FlpControlMother, Sex.Female, GroupBoxListsMother);
             Mother.Draw(PbMotherIcon, new Point(4, 4), Essence.size);
-            Invalidate();
         }
 
-        Animal CreateParent(FlowLayoutPanel flpanel, Sex sex, List<GroupBoxList> groupBoxLists)
+        Essence CreateParent(FlowLayoutPanel flpanel, Sex sex, List<GroupBoxList> groupBoxLists)
         {
             string name = (sex == Sex.Female) ? "Buska" : "Murzik";
 
@@ -80,49 +71,13 @@ namespace Essenses_crossing
                 else
                     allele1 = Allele.Recessive;
 
-                if (groupBoxList.Chekboxes[0].Checked)
+                if (groupBoxList.Chekboxes[1].Checked)
                     allele2 = Allele.Dominant;
                 else
                     allele2 = Allele.Recessive;
 
                 geneList.Add(new Gene(allele1, allele2, groupBoxList.GroupBox.Text));
             }
-            //for (int i = 0; i < attrNames.Count; ++i)
-            //{
-            //GroupBox groupBox = flpanel.Controls[i] as GroupBox;
-            //Allele allele1;
-            //Allele allele2;
-            ////Allele allele3;
-            //if (CheckBoxes[0].Checked)
-            //{
-            //    allele1 = Allele.Dominant;
-            //}
-            //else
-            //{
-            //    allele1 = Allele.Recessive;
-
-            //}
-            //if (CheckBoxes[1].Checked)
-            //{
-            //    allele2 = Allele.Dominant;
-            //}
-            //else
-            //{
-            //    allele2 = Allele.Recessive;
-
-            //}
-            //if (CheckBoxes[2].Checked)
-            //{
-            //    allele3 = Allele.Dominant;
-            //}
-            //else
-            //{
-            //    allele3 = Allele.Recessive;
-
-            //}
-            //    geneList.Add(new Gene(allele1, allele2, attrNames[i]));
-            //}
-
             return new Animal_tertiary(name, sex, geneList[0], geneList[1], geneList[2]);
         }
 
@@ -155,9 +110,9 @@ namespace Essenses_crossing
         {
             if (flppanel != null)
                 flppanel.Controls.Clear();
-            Point locPoint = new Point(10, 20);
             for (int i = 0; i < attrNames.Count; ++i)
             {
+                Point locPoint = new Point(10, 20);
                 Random random = new();
                 GroupBox grbox = new GroupBox();
                 grbox.Text = attrNames[i];
@@ -166,9 +121,6 @@ namespace Essenses_crossing
                     GroupBoxListsFather.Add(groupBox);
                 else if (flppanel.Name == "FlpControlMother")
                     GroupBoxListsMother.Add(groupBox);
-
-                locPoint.X = 10;
-                locPoint.Y = 20;
 
                 for (int j = 0; j < 2; j++)
                 {
@@ -181,19 +133,6 @@ namespace Essenses_crossing
                 }
 
                 groupBox.GroupBox.Parent = flppanel;
-                //groupBoxes[i] = new();
-                //groupBoxes[i].Text = attrNames[i];
-
-                //for (int j = 0; j < 2; j++)
-                //{
-                //    CheckBoxes[j] = new();
-                //    CheckBoxes[j].Text = attrNames[i];
-                //    CheckBoxes[j].Checked = random.Next(2) == 0;
-
-                //    groupBoxes[i].Controls.Add(CheckBoxes[j]);
-                //}
-
-                //groupBoxes[i].Parent = flppanel;
             }
         }
 
@@ -246,34 +185,16 @@ namespace Essenses_crossing
             PnlSettings.Visible = false;
             PnMain.Visible = true;
             UpdateFather();
-            UpddateMother();
+            UpdateMother();
             PbImagesOfChildren.Invalidate();
             SetLabelValues();
         }
 
-        private void Vsbar_Scroll(object sender, ScrollEventArgs e)
-        {
-            if (scrollPosition != Vsbar.Value)
-            {
-                scrollPosition = Vsbar.Value;
-                PbImagesOfChildren.Invalidate();
-            }
-        }
-
         private void Main_Paint(object sender, PaintEventArgs e)
         {
-            int visibleTop = scrollPosition;
-            int visibleBottom = scrollPosition + this.ClientSize.Height;
-
-            //if (PictureBoxBuffer == null || PictureBoxBuffer.Size != PbImagesOfChildren.ClientSize)
-            //{
-            //    PictureBoxBuffer =
-            //        new Bitmap(PbImagesOfChildren.ClientSize.Width, PbImagesOfChildren.ClientSize.Height);
-            //}
-
-            //using (Graphics g = Graphics.FromImage(PictureBoxBuffer))
-            //{
-            //    g.Clear(Color.White);
+            Father.Draw(PbFatherIcon, _CurrentPositionPoint, Essence.size);
+            Mother.Draw(PbMotherIcon, _CurrentPositionPoint, Essence.size);
+            ResetCurrentPositionPoint();
 
             if (offspring != null)
             {
@@ -284,9 +205,6 @@ namespace Essenses_crossing
                 }
                 ResetCurrentPositionPoint();
             }
-            //}
-
-            //PbImagesOfChildren.Image = PictureBoxBuffer;
         }
 
         private void TimerInvalidate_Tick_1(object sender, EventArgs e)
@@ -349,7 +267,6 @@ namespace Essenses_crossing
     {
         public Allele allele1;
         public Allele allele2;
-        //public Allele allele3;
 
         private string _name;
 
@@ -364,14 +281,6 @@ namespace Essenses_crossing
             this.allele2 = allele2;
             _name = name;
         }
-
-        //public Gene(Allele allele1, Allele allele2, Allele allele3, string name)
-        //{
-        //    this.allele1 = allele1;
-        //    this.allele2 = allele2;
-        //    this.allele3 = allele3;
-        //    _name = name;
-        //}
 
         public string ToString(Allele allele)
         {
@@ -507,23 +416,23 @@ namespace Essenses_crossing
 
     public class Animal : Essence
     {
-        public Gene Genotype { get; set; }
+        public Gene Genotype1 { get; set; }
 
         public Animal(string name, Sex sex) : base(name, sex)
         {
-            Genotype = new Gene(EnumHandler.GetRandomValue<Allele>(), EnumHandler.GetRandomValue<Allele>(), name);
-            EssencePhenotype.LineWidth = Genotype.Dominant ? 4 : 1;
+            Genotype1 = new Gene(EnumHandler.GetRandomValue<Allele>(), EnumHandler.GetRandomValue<Allele>(), name);
+            EssencePhenotype.LineWidth = Genotype1.Dominant ? 4 : 1;
         }
 
         public Animal(string name, Sex sex, Gene genotype) : base(name, sex)
         {
-            Genotype = genotype;
-            EssencePhenotype.LineWidth = Genotype.Dominant ? 4 : 1;
+            Genotype1 = genotype;
+            EssencePhenotype.LineWidth = Genotype1.Dominant ? 4 : 1;
         }
 
         protected override Essence Child(Essence partner, string name, Sex sex)
         {
-            Gene childGen = this.Genotype + (partner as Animal).Genotype;
+            Gene childGen = this.Genotype1 + (partner as Animal).Genotype1;
             Essence child = new Animal(name, sex, childGen);
             return child;
         }
@@ -531,57 +440,60 @@ namespace Essenses_crossing
 
     public class Animal_secondary : Animal
     {
-        private Gene Genotype { get; set; }
+        public Gene Genotype2 { get; set; }
 
         public Animal_secondary(string name, Sex sex) : base(name, sex)
         {
-            Genotype = new Gene(EnumHandler.GetRandomValue<Allele>(), EnumHandler.GetRandomValue<Allele>(), name);
-            EssencePhenotype.FillColor = Genotype.Dominant ? Color.DarkOrchid : Color.Tomato;
+            Genotype2 = new Gene(EnumHandler.GetRandomValue<Allele>(), EnumHandler.GetRandomValue<Allele>(), name);
+            EssencePhenotype.FillColor = Genotype2.Dominant ? Color.DarkOrchid : Color.Tomato;
         }
         public Animal_secondary(string name, Sex sex, Gene genotype) : base(name, sex, genotype)
         {
-            Genotype = genotype;
-            EssencePhenotype.FillColor = Genotype.Dominant ? Color.DarkOrchid : Color.Tomato;
+            Genotype2 = genotype;
+            EssencePhenotype.FillColor = Genotype2.Dominant ? Color.DarkOrchid : Color.Tomato;
         }
 
         public Animal_secondary(string name, Sex sex, Gene gene1, Gene gene2) : base(name, sex, gene1)
         {
-            Genotype = gene2;
-            EssencePhenotype.FillColor = Genotype.Dominant ? Color.DarkOrchid : Color.Tomato;
+            Genotype2 = gene2;
+            EssencePhenotype.FillColor = Genotype2.Dominant ? Color.DarkOrchid : Color.Tomato;
         }
 
         protected override Essence Child(Essence partner, string name, Sex sex)
         {
-            Gene childGen = this.Genotype + (partner as Animal_secondary).Genotype;
-            Essence child = new Animal_secondary(name, sex, childGen);
+            Gene childGen1 = this.Genotype1 + (partner as Animal).Genotype1;
+            Gene childGen2 = this.Genotype2 + (partner as Animal_secondary).Genotype2;
+            Essence child = new Animal_secondary(name, sex, childGen1, childGen2);
             return child;
         }
     }
 
     public class Animal_tertiary : Animal_secondary
     {
-        private Gene Genotype { get; set; }
+        private Gene Genotype3 { get; set; }
 
         public Animal_tertiary(string name, Sex sex) : base(name, sex)
         {
-            Genotype = new Gene(EnumHandler.GetRandomValue<Allele>(), EnumHandler.GetRandomValue<Allele>(), name);
-            EssencePhenotype.LineColor = Genotype.Dominant ? Color.SpringGreen : Color.Black;
+            Genotype3 = new Gene(EnumHandler.GetRandomValue<Allele>(), EnumHandler.GetRandomValue<Allele>(), name);
+            EssencePhenotype.LineColor = Genotype3.Dominant ? Color.SpringGreen : Color.Black;
         }
         public Animal_tertiary(string name, Sex sex, Gene genotype) : base(name, sex, genotype)
         {
-            Genotype = genotype;
-            EssencePhenotype.LineColor = Genotype.Dominant ? Color.SpringGreen : Color.Black;
+            Genotype3 = genotype;
+            EssencePhenotype.LineColor = Genotype3.Dominant ? Color.SpringGreen : Color.Black;
         }
 
         public Animal_tertiary(string name, Sex sex, Gene gene1, Gene gene2, Gene gene3) : base(name, sex, gene1, gene2)
         {
-            Genotype = gene3;
-            EssencePhenotype.LineColor = Genotype.Dominant ? Color.SpringGreen : Color.Black;
+            Genotype3 = gene3;
+            EssencePhenotype.LineColor = Genotype3.Dominant ? Color.SpringGreen : Color.Black;
         }
         protected override Essence Child(Essence partner, string name, Sex sex)
         {
-            Gene childGen = this.Genotype + (partner as Animal_tertiary).Genotype;
-            Essence child = new Animal_tertiary(name, sex, childGen);
+            Gene childGen1 = this.Genotype1 + (partner as Animal).Genotype1;
+            Gene childGen2 = this.Genotype2 + (partner as Animal_secondary).Genotype2;
+            Gene childGen3 = this.Genotype3 + (partner as Animal_tertiary).Genotype3;
+            Essence child = new Animal_tertiary(name, sex, childGen1, childGen2, childGen3);
             return child;
         }
     }

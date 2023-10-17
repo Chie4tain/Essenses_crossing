@@ -36,9 +36,10 @@
             LblMother = new Label();
             LblMothername = new Label();
             PnMain = new Panel();
+            pnlChildren = new Panel();
+            PbImagesOfChildren = new PictureBox();
             PbFatherIcon = new PictureBox();
             PbMotherIcon = new PictureBox();
-            PbImagesOfChildren = new PictureBox();
             PnlSettings = new Panel();
             TbarOffspringCount = new TrackBar();
             FlpControlMother = new FlowLayoutPanel();
@@ -50,9 +51,10 @@
             Vsbar = new VScrollBar();
             TimerInvalidate = new System.Windows.Forms.Timer(components);
             PnMain.SuspendLayout();
+            pnlChildren.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)PbImagesOfChildren).BeginInit();
             ((System.ComponentModel.ISupportInitialize)PbFatherIcon).BeginInit();
             ((System.ComponentModel.ISupportInitialize)PbMotherIcon).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)PbImagesOfChildren).BeginInit();
             PnlSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)TbarOffspringCount).BeginInit();
             SuspendLayout();
@@ -115,10 +117,10 @@
             // 
             // PnMain
             // 
+            PnMain.Controls.Add(pnlChildren);
             PnMain.Controls.Add(PbFatherIcon);
             PnMain.Controls.Add(PbMotherIcon);
             PnMain.Controls.Add(LblMother);
-            PnMain.Controls.Add(PbImagesOfChildren);
             PnMain.Controls.Add(BtSettings);
             PnMain.Controls.Add(BtStart);
             PnMain.Controls.Add(LblMothername);
@@ -126,8 +128,26 @@
             PnMain.Controls.Add(LblFather);
             PnMain.Location = new Point(3, 5);
             PnMain.Name = "PnMain";
-            PnMain.Size = new Size(977, 497);
+            PnMain.Size = new Size(977, 515);
             PnMain.TabIndex = 8;
+            // 
+            // pnlChildren
+            // 
+            pnlChildren.AutoScroll = true;
+            pnlChildren.Controls.Add(PbImagesOfChildren);
+            pnlChildren.Location = new Point(9, 224);
+            pnlChildren.Name = "pnlChildren";
+            pnlChildren.Size = new Size(968, 291);
+            pnlChildren.TabIndex = 11;
+            // 
+            // PbImagesOfChildren
+            // 
+            PbImagesOfChildren.Location = new Point(3, 3);
+            PbImagesOfChildren.Name = "PbImagesOfChildren";
+            PbImagesOfChildren.Size = new Size(959, 285);
+            PbImagesOfChildren.TabIndex = 8;
+            PbImagesOfChildren.TabStop = false;
+            PbImagesOfChildren.Paint += Main_Paint;
             // 
             // PbFatherIcon
             // 
@@ -139,20 +159,11 @@
             // 
             // PbMotherIcon
             // 
-            PbMotherIcon.Location = new Point(791, 18);
+            PbMotherIcon.Location = new Point(760, 18);
             PbMotherIcon.Name = "PbMotherIcon";
             PbMotherIcon.Size = new Size(140, 96);
             PbMotherIcon.TabIndex = 9;
             PbMotherIcon.TabStop = false;
-            // 
-            // PbImagesOfChildren
-            // 
-            PbImagesOfChildren.Location = new Point(9, 209);
-            PbImagesOfChildren.Name = "PbImagesOfChildren";
-            PbImagesOfChildren.Size = new Size(959, 285);
-            PbImagesOfChildren.TabIndex = 8;
-            PbImagesOfChildren.TabStop = false;
-            PbImagesOfChildren.Paint += Main_Paint;
             // 
             // PnlSettings
             // 
@@ -248,7 +259,6 @@
             Vsbar.SmallChange = 10;
             Vsbar.TabIndex = 11;
             Vsbar.Visible = false;
-            Vsbar.Scroll += Vsbar_Scroll;
             // 
             // TimerInvalidate
             // 
@@ -263,8 +273,8 @@
             AutoScrollMinSize = new Size(700, 500);
             ClientSize = new Size(999, 653);
             Controls.Add(Vsbar);
-            Controls.Add(PnMain);
             Controls.Add(PnlSettings);
+            Controls.Add(PnMain);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             Name = "Main";
@@ -272,9 +282,10 @@
             Text = "Form1";
             PnMain.ResumeLayout(false);
             PnMain.PerformLayout();
+            pnlChildren.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)PbImagesOfChildren).EndInit();
             ((System.ComponentModel.ISupportInitialize)PbFatherIcon).EndInit();
             ((System.ComponentModel.ISupportInitialize)PbMotherIcon).EndInit();
-            ((System.ComponentModel.ISupportInitialize)PbImagesOfChildren).EndInit();
             PnlSettings.ResumeLayout(false);
             PnlSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)TbarOffspringCount).EndInit();
@@ -319,5 +330,6 @@
         private VScrollBar Vsbar;
         private System.Windows.Forms.Timer TimerInvalidate;
         private TrackBar TbarOffspringCount;
+        private Panel pnlChildren;
     }
 }
