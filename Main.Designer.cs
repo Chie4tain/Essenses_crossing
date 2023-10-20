@@ -49,6 +49,23 @@
             LbSetMother = new Label();
             LbSetFather = new Label();
             TimerInvalidate = new System.Windows.Forms.Timer(components);
+            PnlChildInformation = new Panel();
+            lblGeneName = new Label();
+            lblAllele2name = new Label();
+            lblAllele1name = new Label();
+            lblGene3Allele2 = new Label();
+            lblGene3Allele1 = new Label();
+            lblGene2Allele2 = new Label();
+            lblGene2Allele1 = new Label();
+            lblGene1Allele2 = new Label();
+            lblGene1Allele1 = new Label();
+            lblGene3Name = new Label();
+            lblGene2Name = new Label();
+            lblGene1Name = new Label();
+            ListboxChildren = new ListBox();
+            lblChildSex = new Label();
+            lblChildName = new Label();
+            PbChildIcon = new PictureBox();
             PnMain.SuspendLayout();
             pnlChildren.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)PbImagesOfChildren).BeginInit();
@@ -56,13 +73,15 @@
             ((System.ComponentModel.ISupportInitialize)PbMotherIcon).BeginInit();
             PnlSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numUDOffspingCount).BeginInit();
+            PnlChildInformation.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)PbChildIcon).BeginInit();
             SuspendLayout();
             // 
             // BtStart
             // 
             BtStart.Location = new Point(134, 145);
             BtStart.Name = "BtStart";
-            BtStart.Size = new Size(184, 50);
+            BtStart.Size = new Size(179, 50);
             BtStart.TabIndex = 0;
             BtStart.Text = "Start Crossing";
             BtStart.UseVisualStyleBackColor = true;
@@ -72,7 +91,7 @@
             // 
             BtSettings.Location = new Point(620, 145);
             BtSettings.Name = "BtSettings";
-            BtSettings.Size = new Size(184, 50);
+            BtSettings.Size = new Size(179, 50);
             BtSettings.TabIndex = 1;
             BtSettings.Text = "Settings";
             BtSettings.UseVisualStyleBackColor = true;
@@ -125,25 +144,27 @@
             PnMain.Controls.Add(LblMothername);
             PnMain.Controls.Add(LblFathername);
             PnMain.Controls.Add(LblFather);
-            PnMain.Location = new Point(3, 5);
+            PnMain.Location = new Point(0, 0);
             PnMain.Name = "PnMain";
-            PnMain.Size = new Size(977, 515);
+            PnMain.Size = new Size(999, 530);
             PnMain.TabIndex = 8;
+            PnMain.Scroll += pnlChildren_Scroll;
             // 
             // pnlChildren
             // 
             pnlChildren.AutoScroll = true;
             pnlChildren.Controls.Add(PbImagesOfChildren);
-            pnlChildren.Location = new Point(9, 224);
+            pnlChildren.Location = new Point(0, 225);
             pnlChildren.Name = "pnlChildren";
-            pnlChildren.Size = new Size(968, 291);
+            pnlChildren.Size = new Size(999, 305);
             pnlChildren.TabIndex = 11;
+            pnlChildren.Scroll += pnlChildren_Scroll;
             // 
             // PbImagesOfChildren
             // 
-            PbImagesOfChildren.Location = new Point(3, 3);
+            PbImagesOfChildren.Location = new Point(0, 20);
             PbImagesOfChildren.Name = "PbImagesOfChildren";
-            PbImagesOfChildren.Size = new Size(959, 285);
+            PbImagesOfChildren.Size = new Size(999, 285);
             PbImagesOfChildren.TabIndex = 8;
             PbImagesOfChildren.TabStop = false;
             PbImagesOfChildren.Paint += Main_Paint;
@@ -152,7 +173,7 @@
             // 
             PbFatherIcon.Location = new Point(330, 18);
             PbFatherIcon.Name = "PbFatherIcon";
-            PbFatherIcon.Size = new Size(140, 96);
+            PbFatherIcon.Size = new Size(135, 96);
             PbFatherIcon.TabIndex = 10;
             PbFatherIcon.TabStop = false;
             // 
@@ -160,7 +181,7 @@
             // 
             PbMotherIcon.Location = new Point(760, 18);
             PbMotherIcon.Name = "PbMotherIcon";
-            PbMotherIcon.Size = new Size(140, 96);
+            PbMotherIcon.Size = new Size(135, 96);
             PbMotherIcon.TabIndex = 9;
             PbMotherIcon.TabStop = false;
             // 
@@ -173,9 +194,9 @@
             PnlSettings.Controls.Add(BtSetSettings);
             PnlSettings.Controls.Add(LbSetMother);
             PnlSettings.Controls.Add(LbSetFather);
-            PnlSettings.Location = new Point(3, 5);
+            PnlSettings.Location = new Point(0, 0);
             PnlSettings.Name = "PnlSettings";
-            PnlSettings.Size = new Size(977, 497);
+            PnlSettings.Size = new Size(999, 530);
             PnlSettings.TabIndex = 8;
             PnlSettings.Visible = false;
             // 
@@ -192,7 +213,7 @@
             FlpControlMother.AutoScroll = true;
             FlpControlMother.Location = new Point(507, 59);
             FlpControlMother.Name = "FlpControlMother";
-            FlpControlMother.Size = new Size(461, 224);
+            FlpControlMother.Size = new Size(486, 237);
             FlpControlMother.TabIndex = 10;
             // 
             // LbOffspring
@@ -209,7 +230,7 @@
             // 
             FlpControlFather.Location = new Point(9, 59);
             FlpControlFather.Name = "FlpControlFather";
-            FlpControlFather.Size = new Size(461, 224);
+            FlpControlFather.Size = new Size(486, 237);
             FlpControlFather.TabIndex = 9;
             // 
             // BtSetSettings
@@ -243,20 +264,182 @@
             LbSetFather.TabIndex = 8;
             LbSetFather.Text = "Father";
             // 
+            // PnlChildInformation
+            // 
+            PnlChildInformation.Controls.Add(lblGeneName);
+            PnlChildInformation.Controls.Add(lblAllele2name);
+            PnlChildInformation.Controls.Add(lblAllele1name);
+            PnlChildInformation.Controls.Add(lblGene3Allele2);
+            PnlChildInformation.Controls.Add(lblGene3Allele1);
+            PnlChildInformation.Controls.Add(lblGene2Allele2);
+            PnlChildInformation.Controls.Add(lblGene2Allele1);
+            PnlChildInformation.Controls.Add(lblGene1Allele2);
+            PnlChildInformation.Controls.Add(lblGene1Allele1);
+            PnlChildInformation.Controls.Add(lblGene3Name);
+            PnlChildInformation.Controls.Add(lblGene2Name);
+            PnlChildInformation.Controls.Add(lblGene1Name);
+            PnlChildInformation.Controls.Add(ListboxChildren);
+            PnlChildInformation.Controls.Add(lblChildSex);
+            PnlChildInformation.Controls.Add(lblChildName);
+            PnlChildInformation.Controls.Add(PbChildIcon);
+            PnlChildInformation.Location = new Point(1004, 4);
+            PnlChildInformation.Name = "PnlChildInformation";
+            PnlChildInformation.Size = new Size(377, 512);
+            PnlChildInformation.TabIndex = 9;
+            // 
+            // lblGeneName
+            // 
+            lblGeneName.AutoSize = true;
+            lblGeneName.Location = new Point(12, 195);
+            lblGeneName.Name = "lblGeneName";
+            lblGeneName.Size = new Size(43, 20);
+            lblGeneName.TabIndex = 15;
+            lblGeneName.Text = "Gene";
+            // 
+            // lblAllele2name
+            // 
+            lblAllele2name.AutoSize = true;
+            lblAllele2name.Location = new Point(12, 272);
+            lblAllele2name.Name = "lblAllele2name";
+            lblAllele2name.Size = new Size(59, 20);
+            lblAllele2name.TabIndex = 14;
+            lblAllele2name.Text = "Allele 2";
+            // 
+            // lblAllele1name
+            // 
+            lblAllele1name.AutoSize = true;
+            lblAllele1name.Location = new Point(12, 232);
+            lblAllele1name.Name = "lblAllele1name";
+            lblAllele1name.Size = new Size(59, 20);
+            lblAllele1name.TabIndex = 13;
+            lblAllele1name.Text = "Allele 1";
+            // 
+            // lblGene3Allele2
+            // 
+            lblGene3Allele2.AutoSize = true;
+            lblGene3Allele2.Location = new Point(278, 272);
+            lblGene3Allele2.Name = "lblGene3Allele2";
+            lblGene3Allele2.Size = new Size(0, 20);
+            lblGene3Allele2.TabIndex = 12;
+            // 
+            // lblGene3Allele1
+            // 
+            lblGene3Allele1.AutoSize = true;
+            lblGene3Allele1.Location = new Point(278, 232);
+            lblGene3Allele1.Name = "lblGene3Allele1";
+            lblGene3Allele1.Size = new Size(0, 20);
+            lblGene3Allele1.TabIndex = 11;
+            // 
+            // lblGene2Allele2
+            // 
+            lblGene2Allele2.AutoSize = true;
+            lblGene2Allele2.Location = new Point(205, 272);
+            lblGene2Allele2.Name = "lblGene2Allele2";
+            lblGene2Allele2.Size = new Size(0, 20);
+            lblGene2Allele2.TabIndex = 10;
+            // 
+            // lblGene2Allele1
+            // 
+            lblGene2Allele1.AutoSize = true;
+            lblGene2Allele1.Location = new Point(205, 232);
+            lblGene2Allele1.Name = "lblGene2Allele1";
+            lblGene2Allele1.Size = new Size(0, 20);
+            lblGene2Allele1.TabIndex = 9;
+            // 
+            // lblGene1Allele2
+            // 
+            lblGene1Allele2.AutoSize = true;
+            lblGene1Allele2.Location = new Point(118, 272);
+            lblGene1Allele2.Name = "lblGene1Allele2";
+            lblGene1Allele2.Size = new Size(0, 20);
+            lblGene1Allele2.TabIndex = 8;
+            // 
+            // lblGene1Allele1
+            // 
+            lblGene1Allele1.AutoSize = true;
+            lblGene1Allele1.Location = new Point(118, 232);
+            lblGene1Allele1.Name = "lblGene1Allele1";
+            lblGene1Allele1.Size = new Size(0, 20);
+            lblGene1Allele1.TabIndex = 7;
+            // 
+            // lblGene3Name
+            // 
+            lblGene3Name.AutoSize = true;
+            lblGene3Name.Location = new Point(278, 195);
+            lblGene3Name.Name = "lblGene3Name";
+            lblGene3Name.Size = new Size(45, 20);
+            lblGene3Name.TabIndex = 6;
+            lblGene3Name.Text = "//////";
+            // 
+            // lblGene2Name
+            // 
+            lblGene2Name.AutoSize = true;
+            lblGene2Name.Location = new Point(205, 195);
+            lblGene2Name.Name = "lblGene2Name";
+            lblGene2Name.Size = new Size(27, 20);
+            lblGene2Name.TabIndex = 5;
+            lblGene2Name.Text = "......";
+            // 
+            // lblGene1Name
+            // 
+            lblGene1Name.AutoSize = true;
+            lblGene1Name.Location = new Point(118, 195);
+            lblGene1Name.Name = "lblGene1Name";
+            lblGene1Name.Size = new Size(24, 20);
+            lblGene1Name.TabIndex = 4;
+            lblGene1Name.Text = ".....";
+            // 
+            // ListboxChildren
+            // 
+            ListboxChildren.FormattingEnabled = true;
+            ListboxChildren.ItemHeight = 20;
+            ListboxChildren.Location = new Point(65, 340);
+            ListboxChildren.Name = "ListboxChildren";
+            ListboxChildren.Size = new Size(263, 144);
+            ListboxChildren.TabIndex = 3;
+            ListboxChildren.SelectedIndexChanged += ListboxChildren_SelectedIndexChanged;
+            // 
+            // lblChildSex
+            // 
+            lblChildSex.AutoSize = true;
+            lblChildSex.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            lblChildSex.Location = new Point(26, 82);
+            lblChildSex.Name = "lblChildSex";
+            lblChildSex.Size = new Size(0, 28);
+            lblChildSex.TabIndex = 2;
+            // 
+            // lblChildName
+            // 
+            lblChildName.AutoSize = true;
+            lblChildName.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            lblChildName.Location = new Point(26, 21);
+            lblChildName.Name = "lblChildName";
+            lblChildName.Size = new Size(0, 28);
+            lblChildName.TabIndex = 1;
+            // 
+            // PbChildIcon
+            // 
+            PbChildIcon.Location = new Point(228, 21);
+            PbChildIcon.Name = "PbChildIcon";
+            PbChildIcon.Size = new Size(137, 143);
+            PbChildIcon.TabIndex = 0;
+            PbChildIcon.TabStop = false;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
             AutoScrollMinSize = new Size(700, 500);
-            ClientSize = new Size(999, 530);
-            Controls.Add(PnMain);
+            ClientSize = new Size(1393, 530);
+            Controls.Add(PnlChildInformation);
             Controls.Add(PnlSettings);
+            Controls.Add(PnMain);
             FormBorderStyle = FormBorderStyle.FixedSingle;
-            MaximizeBox = false;
             Name = "Main";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Form1";
+            Text = "Crossing";
+            Resize += Main_Resize;
             PnMain.ResumeLayout(false);
             PnMain.PerformLayout();
             pnlChildren.ResumeLayout(false);
@@ -266,6 +449,9 @@
             PnlSettings.ResumeLayout(false);
             PnlSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)numUDOffspingCount).EndInit();
+            PnlChildInformation.ResumeLayout(false);
+            PnlChildInformation.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)PbChildIcon).EndInit();
             ResumeLayout(false);
         }
 
@@ -307,5 +493,22 @@
         private System.Windows.Forms.Timer TimerInvalidate;
         private Panel pnlChildren;
         private NumericUpDown numUDOffspingCount;
+        private Panel PnlChildInformation;
+        private ListBox ListboxChildren;
+        private Label lblChildSex;
+        private Label lblChildName;
+        private PictureBox PbChildIcon;
+        private Label lblGeneName;
+        private Label lblAllele2name;
+        private Label lblAllele1name;
+        private Label lblGene3Allele2;
+        private Label lblGene3Allele1;
+        private Label lblGene2Allele2;
+        private Label lblGene2Allele1;
+        private Label lblGene1Allele2;
+        private Label lblGene1Allele1;
+        private Label lblGene3Name;
+        private Label lblGene2Name;
+        private Label lblGene1Name;
     }
 }

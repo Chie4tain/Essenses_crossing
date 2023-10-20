@@ -8,10 +8,6 @@ using static Essenses_crossing.Main;
 
 namespace Essenses_crossing
 {
-    public enum Sex { Male, Female };
-    public enum Shapes { Circle, Triangle };
-    public enum Allele { Dominant, Recessive };
-
     public partial class Main : Form
     {
         public Essence Father;
@@ -42,18 +38,70 @@ namespace Essenses_crossing
             numUDOffspingCount.Value = Offspringnumber;
 
             _CurrentPositionPoint = new Point(2, 2);
+
+            PbImagesOfChildren.Parent = pnlChildren;
+
+            ListboxChildren.DisplayMember = "Name";
+
+            SetLblGeneNames();
+
+            EnumHandler.MaleNamesList = FillListOfNames("C:/Users/Максим/Desktop/Essenses_crossing/male_names_rus.txt");
+            EnumHandler.FemaleNamesList = FillListOfNames("C:/Users/Максим/Desktop/Essenses_crossing/female_names_rus.txt");
         }
 
+        private List<string> FillListOfNames(string filename)
+        {
+            string filePath = filename;
+            List<string> names = new List<string>();
+
+            try
+            {
+                StreamReader reader = new StreamReader(filePath);
+
+                string line;
+
+                while ((line = reader.ReadLine()) != null)
+                {
+                    names.Add(line);
+                }
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine("Произошла ошибка чтения файла: " + e.Message);
+            }
+            return names;
+        }
+
+        private void SetLblGeneNames()
+        {
+            lblGene1Name.Text = attrNames[0];
+            lblGene2Name.Text = attrNames[1];
+            lblGene3Name.Text = attrNames[2];
+        }
+        private void SetAllelesNames(Animal_tertiary essence)
+        {
+            if (essence != null)
+            {
+                lblGene1Allele1.Text = essence.Genotype1.ToString(essence.Genotype1.allele1);
+                lblGene1Allele2.Text = essence.Genotype1.ToString(essence.Genotype1.allele2);
+
+                lblGene2Allele1.Text = essence.Genotype2.ToString(essence.Genotype2.allele1);
+                lblGene2Allele2.Text = essence.Genotype2.ToString(essence.Genotype2.allele2);
+
+                lblGene3Allele1.Text = essence.Genotype3.ToString(essence.Genotype3.allele1);
+                lblGene3Allele2.Text = essence.Genotype3.ToString(essence.Genotype3.allele2);
+            }
+        }
 
         private void UpdateFather()
         {
-            PbFatherIcon.Refresh();
+            // PbFatherIcon.Refresh();
             Father = CreateParent(FlpControlFather, Sex.Male, GroupBoxListsFather);
             Father.Draw(PbFatherIcon, new Point(4, 4), Essence.size);
         }
         private void UpdateMother()
         {
-            PbFatherIcon.Refresh();
+            // PbFatherIcon.Refresh();
             Mother = CreateParent(FlpControlMother, Sex.Female, GroupBoxListsMother);
             Mother.Draw(PbMotherIcon, new Point(4, 4), Essence.size);
         }
@@ -164,14 +212,17 @@ namespace Essenses_crossing
         {
             PbImagesOfChildren.Refresh();
             PbImagesOfChildren.Controls.Clear();
+            ListboxChildren.Items.Clear();
             offspring = Father.Breed(Mother, Offspringnumber);
 
             for (int i = 0; i < Offspringnumber; i++)
             {
                 offspring[i].Draw(PbImagesOfChildren, _CurrentPositionPoint, Essence.size);
+                ListboxChildren.Items.Add(offspring[i]);
                 OffsetCurrentPositionPoint(offspring[i].Name);
             }
             ResetCurrentPositionPoint();
+
         }
 
         private void BtSettings_Click(object sender, EventArgs e)
@@ -211,13 +262,36 @@ namespace Essenses_crossing
         {
             Offspringnumber = (int)numUDOffspingCount.Value;
         }
+
+        private void pnlChildren_Scroll(object sender, ScrollEventArgs e)
+        {
+
+        }
+
+        private void Main_Resize(object sender, EventArgs e)
+        {
+            PnMain.Size = this.ClientSize;
+            PnlSettings.Size = this.ClientSize;
+        }
+
+        private void ListboxChildren_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Animal_tertiary selectedChild = (Animal_tertiary)ListboxChildren.SelectedItem;
+            if (selectedChild != null)
+            {
+                PbChildIcon.Image = selectedChild.EssenceIcon;
+                lblChildName.Text = selectedChild.Name;
+                lblChildSex.Text = selectedChild.ToStringSex();
+                SetAllelesNames(selectedChild);
+            }
+        }
     }
-
-
     public static class EnumHandler
     {
-        public static string[] male_names = { "Barsick", "Tuzik", "Zhuzhik", "Pup", "GigaChad", "Sharp", "Shults", "Garik", "Bulgum" };
-        public static string[] female_names = { "Misca", "Phimka", "Busa", "Pupa", "Omega", "Princess", "Murka", "Zhuchka", "Kapa" };
+        public static List<string> MaleNamesList = new List<string>();
+        public static List<string> FemaleNamesList = new List<string>();
+        //public static string[] male_names = { "Barsick", "Tuzik", "Zhuzhik", "Pup", "GigaChad", "Sharp", "Shults", "Garik", "Bulgum" };
+        //public static string[] female_names = { "Misca", "Phimka", "Busa", "Pupa", "Omega", "Princess", "Murka", "Zhuchka", "Kapa" };
         public static int GetSize<T>() where T : Enum
         {
             return Enum.GetValues(typeof(T)).Length;
@@ -231,265 +305,6 @@ namespace Essenses_crossing
             int randomIndex = random.Next(values.Length);
 
             return values[randomIndex];
-        }
-    }
-
-    public static class Extensions
-    {
-        public static void FillTriangle(this Graphics graphics, Brush brush, Rectangle rectangle)
-        {
-            Point[] points = new Point[3];
-
-            points[0] = new Point(rectangle.Left, rectangle.Top);
-            points[1] = new Point(rectangle.Right, rectangle.Top);
-            points[2] = new Point(rectangle.Left + rectangle.Width / 2, rectangle.Bottom);
-
-            graphics.FillPolygon(brush, points);
-        }
-
-        public static void DrawTriangle(this Graphics graphics, Pen pen, Rectangle rectangle)
-        {
-            Point[] points = new Point[3];
-
-            points[0] = new Point(rectangle.Left, rectangle.Top);
-            points[1] = new Point(rectangle.Right, rectangle.Top);
-            points[2] = new Point(rectangle.Left + rectangle.Width / 2, rectangle.Bottom);
-
-            graphics.DrawPolygon(pen, points);
-        }
-    }
-    public class Gene
-    {
-        public Allele allele1;
-        public Allele allele2;
-
-        private string _name;
-
-        public bool Dominant
-        {
-            get { return allele1 == Allele.Dominant || allele2 == Allele.Dominant; }
-        }
-
-        public Gene(Allele allele1, Allele allele2, string name)
-        {
-            this.allele1 = allele1;
-            this.allele2 = allele2;
-            _name = name;
-        }
-
-        public string ToString(Allele allele)
-        {
-            return allele == Allele.Dominant ? "Dominant" : "Recessive";
-        }
-
-        public static Gene operator +(Gene gen1, Gene gen2)
-        {
-            Random random = new();
-            Thread.Sleep(1);
-
-            Allele allele1 = random.Next(2) == 0 ? gen1.allele1 : gen2.allele1;
-            Allele allele2 = random.Next(2) == 0 ? gen1.allele2 : gen2.allele2;
-
-            return new Gene(allele1, allele2, gen1._name);
-        }
-    }
-
-    public class Phenotype
-    {
-        public Shapes Shape { get; set; }
-        public Color LineColor { get; set; }
-        public Color FillColor { get; set; }
-        public float LineWidth { get; set; }
-
-        public Phenotype()
-        {
-            Shape = Shapes.Circle;
-            LineColor = Color.Purple;
-            FillColor = Color.Empty;
-            LineWidth = 1;
-        }
-
-        public Phenotype(Shapes shape) : this()
-        {
-            Shape = shape;
-        }
-
-        public Phenotype(Shapes shape, Color lineColor) : this(shape)
-        {
-            LineColor = lineColor;
-        }
-
-        public Phenotype(Shapes shape, Color lineColor, Color fillColor) : this(shape, lineColor)
-        {
-            FillColor = fillColor;
-        }
-
-        public Phenotype(Shapes shape, Color lineColor, Color fillColor, float lineWidth) : this(shape, lineColor, fillColor)
-        {
-            LineWidth = lineWidth;
-        }
-
-        public void Draw(Graphics graphics, Point point, int size)
-        {
-            Pen pen = new(LineColor, LineWidth);
-            Brush brush = new SolidBrush(FillColor);
-
-            Rectangle rectangle = new(point, new Size(size, size));
-
-            switch (Shape)
-            {
-                case Shapes.Circle:
-                    graphics.FillEllipse(brush, rectangle);
-                    graphics.DrawEllipse(pen, rectangle);
-                    break;
-                case Shapes.Triangle:
-                    graphics.FillTriangle(brush, rectangle);
-                    graphics.DrawTriangle(pen, rectangle);
-                    break;
-            }
-        }
-    }
-
-    public abstract class Essence
-    {
-        private string _name;
-
-        public static int size = 45;
-        public string Name
-        {
-            get { return _name; }
-            set { _name = (value != string.Empty) ? value : "Barsick"; }
-        }
-        public Sex sex { get; set; }
-        public Phenotype EssencePhenotype { get; set; }
-
-        public Essence(string name, Sex pSex)
-        {
-            Name = name;
-            sex = pSex;
-            EssencePhenotype = new Phenotype((sex == Sex.Male) ? Shapes.Triangle : Shapes.Circle);
-        }
-
-        public void Draw(Control control, Point point, int size)
-        {
-            Graphics graphic = control.CreateGraphics();
-
-            Label nameLabel = new();
-            nameLabel.Text = Name;
-            nameLabel.Location = new Point(point.X, point.Y + (size + (10 * size / 100)));
-            nameLabel.AutoSize = true;
-
-            control.Controls.Add(nameLabel);
-
-            EssencePhenotype.Draw(graphic, point, size);
-        }
-
-        public List<Essence> Breed(Essence partner, int count)
-        {
-            List<Essence> Children = new List<Essence>();
-            Random random = new();
-            string name = "";
-            Sex sex = new();
-            for (int i = 0; i < count; i++)
-            {
-                sex = EnumHandler.GetRandomValue<Sex>();
-                if (sex == Sex.Male)
-                {
-                    name = EnumHandler.male_names[random.Next(EnumHandler.male_names.Length)];
-                }
-                else
-                {
-                    name = EnumHandler.female_names[random.Next(EnumHandler.female_names.Length)];
-                }
-                Essence child = this.Child(partner, name, sex);
-                Children.Add(child);
-            }
-            return Children;
-        }
-        protected abstract Essence Child(Essence partner, string name, Sex pSex);
-    }
-
-    public class Animal : Essence
-    {
-        public Gene Genotype1 { get; set; }
-
-        public Animal(string name, Sex sex) : base(name, sex)
-        {
-            Genotype1 = new Gene(EnumHandler.GetRandomValue<Allele>(), EnumHandler.GetRandomValue<Allele>(), name);
-            EssencePhenotype.LineWidth = Genotype1.Dominant ? 4 : 1;
-        }
-
-        public Animal(string name, Sex sex, Gene genotype) : base(name, sex)
-        {
-            Genotype1 = genotype;
-            EssencePhenotype.LineWidth = Genotype1.Dominant ? 4 : 1;
-        }
-
-        protected override Essence Child(Essence partner, string name, Sex sex)
-        {
-            Gene childGen = this.Genotype1 + (partner as Animal).Genotype1;
-            Essence child = new Animal(name, sex, childGen);
-            return child;
-        }
-    }
-
-    public class Animal_secondary : Animal
-    {
-        public Gene Genotype2 { get; set; }
-
-        public Animal_secondary(string name, Sex sex) : base(name, sex)
-        {
-            Genotype2 = new Gene(EnumHandler.GetRandomValue<Allele>(), EnumHandler.GetRandomValue<Allele>(), name);
-            EssencePhenotype.FillColor = Genotype2.Dominant ? Color.DarkOrchid : Color.Tomato;
-        }
-        public Animal_secondary(string name, Sex sex, Gene genotype) : base(name, sex, genotype)
-        {
-            Genotype2 = genotype;
-            EssencePhenotype.FillColor = Genotype2.Dominant ? Color.DarkOrchid : Color.Tomato;
-        }
-
-        public Animal_secondary(string name, Sex sex, Gene gene1, Gene gene2) : base(name, sex, gene1)
-        {
-            Genotype2 = gene2;
-            EssencePhenotype.FillColor = Genotype2.Dominant ? Color.DarkOrchid : Color.Tomato;
-        }
-
-        protected override Essence Child(Essence partner, string name, Sex sex)
-        {
-            Gene childGen1 = this.Genotype1 + (partner as Animal).Genotype1;
-            Gene childGen2 = this.Genotype2 + (partner as Animal_secondary).Genotype2;
-            Essence child = new Animal_secondary(name, sex, childGen1, childGen2);
-            return child;
-        }
-    }
-
-    public class Animal_tertiary : Animal_secondary
-    {
-        private Gene Genotype3 { get; set; }
-
-        public Animal_tertiary(string name, Sex sex) : base(name, sex)
-        {
-            Genotype3 = new Gene(EnumHandler.GetRandomValue<Allele>(), EnumHandler.GetRandomValue<Allele>(), name);
-            EssencePhenotype.LineColor = Genotype3.Dominant ? Color.SpringGreen : Color.Black;
-        }
-        public Animal_tertiary(string name, Sex sex, Gene genotype) : base(name, sex, genotype)
-        {
-            Genotype3 = genotype;
-            EssencePhenotype.LineColor = Genotype3.Dominant ? Color.SpringGreen : Color.Black;
-        }
-
-        public Animal_tertiary(string name, Sex sex, Gene gene1, Gene gene2, Gene gene3) : base(name, sex, gene1, gene2)
-        {
-            Genotype3 = gene3;
-            EssencePhenotype.LineColor = Genotype3.Dominant ? Color.SpringGreen : Color.Black;
-        }
-        protected override Essence Child(Essence partner, string name, Sex sex)
-        {
-            Gene childGen1 = this.Genotype1 + (partner as Animal).Genotype1;
-            Gene childGen2 = this.Genotype2 + (partner as Animal_secondary).Genotype2;
-            Gene childGen3 = this.Genotype3 + (partner as Animal_tertiary).Genotype3;
-            Essence child = new Animal_tertiary(name, sex, childGen1, childGen2, childGen3);
-            return child;
         }
     }
 }
