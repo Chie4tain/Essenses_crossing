@@ -50,6 +50,11 @@
             LbSetFather = new Label();
             TimerInvalidate = new System.Windows.Forms.Timer(components);
             PnlChildInformation = new Panel();
+            gbFilter = new GroupBox();
+            rbSortNone = new RadioButton();
+            rbSortFemale = new RadioButton();
+            rbSortMale = new RadioButton();
+            chbSortName = new CheckBox();
             lblGeneName = new Label();
             lblAllele2name = new Label();
             lblAllele1name = new Label();
@@ -74,6 +79,7 @@
             PnlSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numUDOffspingCount).BeginInit();
             PnlChildInformation.SuspendLayout();
+            gbFilter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)PbChildIcon).BeginInit();
             SuspendLayout();
             // 
@@ -148,7 +154,6 @@
             PnMain.Name = "PnMain";
             PnMain.Size = new Size(999, 530);
             PnMain.TabIndex = 8;
-            PnMain.Scroll += pnlChildren_Scroll;
             // 
             // pnlChildren
             // 
@@ -158,7 +163,6 @@
             pnlChildren.Name = "pnlChildren";
             pnlChildren.Size = new Size(999, 305);
             pnlChildren.TabIndex = 11;
-            pnlChildren.Scroll += pnlChildren_Scroll;
             // 
             // PbImagesOfChildren
             // 
@@ -266,6 +270,8 @@
             // 
             // PnlChildInformation
             // 
+            PnlChildInformation.Controls.Add(gbFilter);
+            PnlChildInformation.Controls.Add(chbSortName);
             PnlChildInformation.Controls.Add(lblGeneName);
             PnlChildInformation.Controls.Add(lblAllele2name);
             PnlChildInformation.Controls.Add(lblAllele1name);
@@ -282,10 +288,68 @@
             PnlChildInformation.Controls.Add(lblChildSex);
             PnlChildInformation.Controls.Add(lblChildName);
             PnlChildInformation.Controls.Add(PbChildIcon);
-            PnlChildInformation.Location = new Point(1004, 4);
+            PnlChildInformation.Dock = DockStyle.Right;
+            PnlChildInformation.Location = new Point(1016, 0);
             PnlChildInformation.Name = "PnlChildInformation";
-            PnlChildInformation.Size = new Size(377, 512);
+            PnlChildInformation.Size = new Size(377, 530);
             PnlChildInformation.TabIndex = 9;
+            // 
+            // gbFilter
+            // 
+            gbFilter.Controls.Add(rbSortNone);
+            gbFilter.Controls.Add(rbSortFemale);
+            gbFilter.Controls.Add(rbSortMale);
+            gbFilter.Location = new Point(2, 379);
+            gbFilter.Name = "gbFilter";
+            gbFilter.Size = new Size(117, 102);
+            gbFilter.TabIndex = 17;
+            gbFilter.TabStop = false;
+            // 
+            // rbSortNone
+            // 
+            rbSortNone.AutoSize = true;
+            rbSortNone.Location = new Point(0, 58);
+            rbSortNone.Name = "rbSortNone";
+            rbSortNone.Size = new Size(117, 24);
+            rbSortNone.TabIndex = 2;
+            rbSortNone.TabStop = true;
+            rbSortNone.Text = "View m and f";
+            rbSortNone.UseVisualStyleBackColor = true;
+            // 
+            // rbSortFemale
+            // 
+            rbSortFemale.AutoSize = true;
+            rbSortFemale.Location = new Point(0, 28);
+            rbSortFemale.Name = "rbSortFemale";
+            rbSortFemale.Size = new Size(112, 24);
+            rbSortFemale.TabIndex = 1;
+            rbSortFemale.TabStop = true;
+            rbSortFemale.Text = "View female";
+            rbSortFemale.UseVisualStyleBackColor = true;
+            rbSortFemale.CheckedChanged += rbSortFemale_CheckedChanged;
+            // 
+            // rbSortMale
+            // 
+            rbSortMale.AutoSize = true;
+            rbSortMale.Location = new Point(-1, -2);
+            rbSortMale.Name = "rbSortMale";
+            rbSortMale.Size = new Size(99, 24);
+            rbSortMale.TabIndex = 0;
+            rbSortMale.TabStop = true;
+            rbSortMale.Text = "View male";
+            rbSortMale.UseVisualStyleBackColor = true;
+            rbSortMale.CheckedChanged += rbSortMale_CheckedChanged;
+            // 
+            // chbSortName
+            // 
+            chbSortName.AutoSize = true;
+            chbSortName.Location = new Point(0, 347);
+            chbSortName.Name = "chbSortName";
+            chbSortName.Size = new Size(119, 24);
+            chbSortName.TabIndex = 16;
+            chbSortName.Text = "Sort by name";
+            chbSortName.UseVisualStyleBackColor = true;
+            chbSortName.CheckedChanged += chbSortName_CheckedChanged;
             // 
             // lblGeneName
             // 
@@ -367,35 +431,32 @@
             lblGene3Name.AutoSize = true;
             lblGene3Name.Location = new Point(278, 195);
             lblGene3Name.Name = "lblGene3Name";
-            lblGene3Name.Size = new Size(45, 20);
+            lblGene3Name.Size = new Size(0, 20);
             lblGene3Name.TabIndex = 6;
-            lblGene3Name.Text = "//////";
             // 
             // lblGene2Name
             // 
             lblGene2Name.AutoSize = true;
             lblGene2Name.Location = new Point(205, 195);
             lblGene2Name.Name = "lblGene2Name";
-            lblGene2Name.Size = new Size(27, 20);
+            lblGene2Name.Size = new Size(0, 20);
             lblGene2Name.TabIndex = 5;
-            lblGene2Name.Text = "......";
             // 
             // lblGene1Name
             // 
             lblGene1Name.AutoSize = true;
             lblGene1Name.Location = new Point(118, 195);
             lblGene1Name.Name = "lblGene1Name";
-            lblGene1Name.Size = new Size(24, 20);
+            lblGene1Name.Size = new Size(0, 20);
             lblGene1Name.TabIndex = 4;
-            lblGene1Name.Text = ".....";
             // 
             // ListboxChildren
             // 
             ListboxChildren.FormattingEnabled = true;
             ListboxChildren.ItemHeight = 20;
-            ListboxChildren.Location = new Point(65, 340);
+            ListboxChildren.Location = new Point(118, 344);
             ListboxChildren.Name = "ListboxChildren";
-            ListboxChildren.Size = new Size(263, 144);
+            ListboxChildren.Size = new Size(256, 144);
             ListboxChildren.TabIndex = 3;
             ListboxChildren.SelectedIndexChanged += ListboxChildren_SelectedIndexChanged;
             // 
@@ -451,6 +512,8 @@
             ((System.ComponentModel.ISupportInitialize)numUDOffspingCount).EndInit();
             PnlChildInformation.ResumeLayout(false);
             PnlChildInformation.PerformLayout();
+            gbFilter.ResumeLayout(false);
+            gbFilter.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)PbChildIcon).EndInit();
             ResumeLayout(false);
         }
@@ -510,5 +573,10 @@
         private Label lblGene3Name;
         private Label lblGene2Name;
         private Label lblGene1Name;
+        private CheckBox chbSortName;
+        private GroupBox gbFilter;
+        private RadioButton rbSortFemale;
+        private RadioButton rbSortMale;
+        private RadioButton rbSortNone;
     }
 }

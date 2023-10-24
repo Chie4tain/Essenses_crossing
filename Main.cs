@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using static Essenses_crossing.Main;
+using Microsoft.VisualBasic.ApplicationServices;
 
 namespace Essenses_crossing
 {
@@ -263,11 +264,6 @@ namespace Essenses_crossing
             Offspringnumber = (int)numUDOffspingCount.Value;
         }
 
-        private void pnlChildren_Scroll(object sender, ScrollEventArgs e)
-        {
-
-        }
-
         private void Main_Resize(object sender, EventArgs e)
         {
             PnMain.Size = this.ClientSize;
@@ -285,13 +281,60 @@ namespace Essenses_crossing
                 SetAllelesNames(selectedChild);
             }
         }
+
+        private void rbSortMale_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateListBox();
+        }
+
+        private void rbSortFemale_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateListBox();
+        }
+
+        private void chbSortName_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateListBox();
+        }
+        private void UpdateListBox()
+        {
+            if (offspring != null)
+            {
+                List<Essence> filteredList = new List<Essence>();
+                if (rbSortMale.Checked)
+                {
+                    filteredList = offspring.Where(child => child.sex == Sex.Male).ToList();
+                }
+                else if (rbSortFemale.Checked)
+                {
+                    filteredList = offspring.Where(child => child.sex == Sex.Female).ToList();
+                }
+                else if (rbSortNone.Checked)
+                {
+                    filteredList = offspring.ToList();
+                }
+                else
+                {
+                    filteredList = offspring.ToList();
+                }
+                if (chbSortName.Checked)
+                {
+                    filteredList = filteredList.OrderBy(child => child.Name).ToList();
+                }
+                ListboxChildren.Items.Clear();
+
+                foreach (var child in filteredList)
+                {
+                    ListboxChildren.Items.Add(child);
+                }
+            }
+
+        }
     }
     public static class EnumHandler
     {
         public static List<string> MaleNamesList = new List<string>();
         public static List<string> FemaleNamesList = new List<string>();
-        //public static string[] male_names = { "Barsick", "Tuzik", "Zhuzhik", "Pup", "GigaChad", "Sharp", "Shults", "Garik", "Bulgum" };
-        //public static string[] female_names = { "Misca", "Phimka", "Busa", "Pupa", "Omega", "Princess", "Murka", "Zhuchka", "Kapa" };
         public static int GetSize<T>() where T : Enum
         {
             return Enum.GetValues(typeof(T)).Length;
