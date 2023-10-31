@@ -41,6 +41,8 @@
             PbFatherIcon = new PictureBox();
             PbMotherIcon = new PictureBox();
             PnlSettings = new Panel();
+            lbAttrsCount = new Label();
+            comboxSetAttrsCount = new ComboBox();
             numUDOffspingCount = new NumericUpDown();
             FlpControlMother = new FlowLayoutPanel();
             LbOffspring = new Label();
@@ -50,23 +52,12 @@
             LbSetFather = new Label();
             TimerInvalidate = new System.Windows.Forms.Timer(components);
             PnlChildInformation = new Panel();
+            lbChildAttr = new Label();
             gbFilter = new GroupBox();
             rbSortNone = new RadioButton();
             rbSortFemale = new RadioButton();
             rbSortMale = new RadioButton();
             chbSortName = new CheckBox();
-            lblGeneName = new Label();
-            lblAllele2name = new Label();
-            lblAllele1name = new Label();
-            lblGene3Allele2 = new Label();
-            lblGene3Allele1 = new Label();
-            lblGene2Allele2 = new Label();
-            lblGene2Allele1 = new Label();
-            lblGene1Allele2 = new Label();
-            lblGene1Allele1 = new Label();
-            lblGene3Name = new Label();
-            lblGene2Name = new Label();
-            lblGene1Name = new Label();
             ListboxChildren = new ListBox();
             lblChildSex = new Label();
             lblChildName = new Label();
@@ -105,6 +96,7 @@
             // 
             // LblFather
             // 
+            LblFather.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             LblFather.AutoSize = true;
             LblFather.Location = new Point(134, 25);
             LblFather.Name = "LblFather";
@@ -114,6 +106,7 @@
             // 
             // LblFathername
             // 
+            LblFathername.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             LblFathername.AutoSize = true;
             LblFathername.Location = new Point(134, 58);
             LblFathername.Name = "LblFathername";
@@ -123,6 +116,7 @@
             // 
             // LblMother
             // 
+            LblMother.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             LblMother.AutoSize = true;
             LblMother.Location = new Point(572, 25);
             LblMother.Name = "LblMother";
@@ -132,6 +126,7 @@
             // 
             // LblMothername
             // 
+            LblMothername.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             LblMothername.AutoSize = true;
             LblMothername.Location = new Point(572, 58);
             LblMothername.Name = "LblMothername";
@@ -141,6 +136,7 @@
             // 
             // PnMain
             // 
+            PnMain.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             PnMain.Controls.Add(pnlChildren);
             PnMain.Controls.Add(PbFatherIcon);
             PnMain.Controls.Add(PbMotherIcon);
@@ -157,6 +153,7 @@
             // 
             // pnlChildren
             // 
+            pnlChildren.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlChildren.AutoScroll = true;
             pnlChildren.Controls.Add(PbImagesOfChildren);
             pnlChildren.Location = new Point(0, 225);
@@ -172,9 +169,11 @@
             PbImagesOfChildren.TabIndex = 8;
             PbImagesOfChildren.TabStop = false;
             PbImagesOfChildren.Paint += Main_Paint;
+            PbImagesOfChildren.MouseClick += PbImagesOfChildren_MouseClick;
             // 
             // PbFatherIcon
             // 
+            PbFatherIcon.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             PbFatherIcon.Location = new Point(330, 18);
             PbFatherIcon.Name = "PbFatherIcon";
             PbFatherIcon.Size = new Size(135, 96);
@@ -183,6 +182,7 @@
             // 
             // PbMotherIcon
             // 
+            PbMotherIcon.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             PbMotherIcon.Location = new Point(760, 18);
             PbMotherIcon.Name = "PbMotherIcon";
             PbMotherIcon.Size = new Size(135, 96);
@@ -191,6 +191,9 @@
             // 
             // PnlSettings
             // 
+            PnlSettings.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            PnlSettings.Controls.Add(lbAttrsCount);
+            PnlSettings.Controls.Add(comboxSetAttrsCount);
             PnlSettings.Controls.Add(numUDOffspingCount);
             PnlSettings.Controls.Add(FlpControlMother);
             PnlSettings.Controls.Add(LbOffspring);
@@ -200,31 +203,57 @@
             PnlSettings.Controls.Add(LbSetFather);
             PnlSettings.Location = new Point(0, 0);
             PnlSettings.Name = "PnlSettings";
-            PnlSettings.Size = new Size(999, 530);
+            PnlSettings.Size = new Size(999, 549);
             PnlSettings.TabIndex = 8;
             PnlSettings.Visible = false;
             // 
+            // lbAttrsCount
+            // 
+            lbAttrsCount.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lbAttrsCount.AutoSize = true;
+            lbAttrsCount.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            lbAttrsCount.Location = new Point(471, 113);
+            lbAttrsCount.Name = "lbAttrsCount";
+            lbAttrsCount.Size = new Size(145, 28);
+            lbAttrsCount.TabIndex = 31;
+            lbAttrsCount.Text = "Set Attrs Count";
+            // 
+            // comboxSetAttrsCount
+            // 
+            comboxSetAttrsCount.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            comboxSetAttrsCount.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboxSetAttrsCount.FormattingEnabled = true;
+            comboxSetAttrsCount.Items.AddRange(new object[] { "LineWidth", "LineWidth, FillColor", "LineWidth, FillColor, LineColor" });
+            comboxSetAttrsCount.Location = new Point(471, 157);
+            comboxSetAttrsCount.Name = "comboxSetAttrsCount";
+            comboxSetAttrsCount.Size = new Size(215, 28);
+            comboxSetAttrsCount.TabIndex = 30;
+            comboxSetAttrsCount.SelectedIndexChanged += comboxSetAttrsCount_SelectedIndexChanged;
+            // 
             // numUDOffspingCount
             // 
-            numUDOffspingCount.Location = new Point(237, 344);
+            numUDOffspingCount.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            numUDOffspingCount.Location = new Point(472, 59);
             numUDOffspingCount.Name = "numUDOffspingCount";
-            numUDOffspingCount.Size = new Size(535, 27);
+            numUDOffspingCount.Size = new Size(327, 27);
             numUDOffspingCount.TabIndex = 29;
             numUDOffspingCount.ValueChanged += nUDChildrenCount_ValueChanged;
             // 
             // FlpControlMother
             // 
+            FlpControlMother.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             FlpControlMother.AutoScroll = true;
-            FlpControlMother.Location = new Point(507, 59);
+            FlpControlMother.Location = new Point(12, 319);
             FlpControlMother.Name = "FlpControlMother";
-            FlpControlMother.Size = new Size(486, 237);
+            FlpControlMother.Size = new Size(437, 218);
             FlpControlMother.TabIndex = 10;
             // 
             // LbOffspring
             // 
+            LbOffspring.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             LbOffspring.AutoSize = true;
             LbOffspring.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            LbOffspring.Location = new Point(237, 299);
+            LbOffspring.Location = new Point(471, 17);
             LbOffspring.Name = "LbOffspring";
             LbOffspring.Size = new Size(194, 28);
             LbOffspring.TabIndex = 21;
@@ -232,17 +261,19 @@
             // 
             // FlpControlFather
             // 
+            FlpControlFather.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             FlpControlFather.Location = new Point(9, 59);
             FlpControlFather.Name = "FlpControlFather";
-            FlpControlFather.Size = new Size(486, 237);
+            FlpControlFather.Size = new Size(440, 214);
             FlpControlFather.TabIndex = 9;
             // 
             // BtSetSettings
             // 
+            BtSetSettings.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             BtSetSettings.Font = new Font("Segoe UI", 30F, FontStyle.Regular, GraphicsUnit.Point);
-            BtSetSettings.Location = new Point(347, 402);
+            BtSetSettings.Location = new Point(499, 437);
             BtSetSettings.Name = "BtSetSettings";
-            BtSetSettings.Size = new Size(282, 74);
+            BtSetSettings.Size = new Size(223, 74);
             BtSetSettings.TabIndex = 14;
             BtSetSettings.Text = "OK";
             BtSetSettings.UseVisualStyleBackColor = true;
@@ -250,9 +281,10 @@
             // 
             // LbSetMother
             // 
+            LbSetMother.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             LbSetMother.AutoSize = true;
             LbSetMother.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            LbSetMother.Location = new Point(507, 18);
+            LbSetMother.Location = new Point(12, 276);
             LbSetMother.Name = "LbSetMother";
             LbSetMother.Size = new Size(77, 28);
             LbSetMother.TabIndex = 9;
@@ -260,6 +292,7 @@
             // 
             // LbSetFather
             // 
+            LbSetFather.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             LbSetFather.AutoSize = true;
             LbSetFather.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             LbSetFather.Location = new Point(25, 18);
@@ -270,32 +303,31 @@
             // 
             // PnlChildInformation
             // 
+            PnlChildInformation.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            PnlChildInformation.Controls.Add(lbChildAttr);
             PnlChildInformation.Controls.Add(gbFilter);
             PnlChildInformation.Controls.Add(chbSortName);
-            PnlChildInformation.Controls.Add(lblGeneName);
-            PnlChildInformation.Controls.Add(lblAllele2name);
-            PnlChildInformation.Controls.Add(lblAllele1name);
-            PnlChildInformation.Controls.Add(lblGene3Allele2);
-            PnlChildInformation.Controls.Add(lblGene3Allele1);
-            PnlChildInformation.Controls.Add(lblGene2Allele2);
-            PnlChildInformation.Controls.Add(lblGene2Allele1);
-            PnlChildInformation.Controls.Add(lblGene1Allele2);
-            PnlChildInformation.Controls.Add(lblGene1Allele1);
-            PnlChildInformation.Controls.Add(lblGene3Name);
-            PnlChildInformation.Controls.Add(lblGene2Name);
-            PnlChildInformation.Controls.Add(lblGene1Name);
             PnlChildInformation.Controls.Add(ListboxChildren);
             PnlChildInformation.Controls.Add(lblChildSex);
             PnlChildInformation.Controls.Add(lblChildName);
             PnlChildInformation.Controls.Add(PbChildIcon);
-            PnlChildInformation.Dock = DockStyle.Right;
             PnlChildInformation.Location = new Point(1016, 0);
             PnlChildInformation.Name = "PnlChildInformation";
-            PnlChildInformation.Size = new Size(377, 530);
+            PnlChildInformation.Size = new Size(377, 549);
             PnlChildInformation.TabIndex = 9;
+            // 
+            // lbChildAttr
+            // 
+            lbChildAttr.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            lbChildAttr.AutoSize = true;
+            lbChildAttr.Location = new Point(31, 188);
+            lbChildAttr.Name = "lbChildAttr";
+            lbChildAttr.Size = new Size(0, 20);
+            lbChildAttr.TabIndex = 18;
             // 
             // gbFilter
             // 
+            gbFilter.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             gbFilter.Controls.Add(rbSortNone);
             gbFilter.Controls.Add(rbSortFemale);
             gbFilter.Controls.Add(rbSortMale);
@@ -342,6 +374,7 @@
             // 
             // chbSortName
             // 
+            chbSortName.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             chbSortName.AutoSize = true;
             chbSortName.Location = new Point(0, 347);
             chbSortName.Name = "chbSortName";
@@ -351,107 +384,9 @@
             chbSortName.UseVisualStyleBackColor = true;
             chbSortName.CheckedChanged += chbSortName_CheckedChanged;
             // 
-            // lblGeneName
-            // 
-            lblGeneName.AutoSize = true;
-            lblGeneName.Location = new Point(12, 195);
-            lblGeneName.Name = "lblGeneName";
-            lblGeneName.Size = new Size(43, 20);
-            lblGeneName.TabIndex = 15;
-            lblGeneName.Text = "Gene";
-            // 
-            // lblAllele2name
-            // 
-            lblAllele2name.AutoSize = true;
-            lblAllele2name.Location = new Point(12, 272);
-            lblAllele2name.Name = "lblAllele2name";
-            lblAllele2name.Size = new Size(59, 20);
-            lblAllele2name.TabIndex = 14;
-            lblAllele2name.Text = "Allele 2";
-            // 
-            // lblAllele1name
-            // 
-            lblAllele1name.AutoSize = true;
-            lblAllele1name.Location = new Point(12, 232);
-            lblAllele1name.Name = "lblAllele1name";
-            lblAllele1name.Size = new Size(59, 20);
-            lblAllele1name.TabIndex = 13;
-            lblAllele1name.Text = "Allele 1";
-            // 
-            // lblGene3Allele2
-            // 
-            lblGene3Allele2.AutoSize = true;
-            lblGene3Allele2.Location = new Point(278, 272);
-            lblGene3Allele2.Name = "lblGene3Allele2";
-            lblGene3Allele2.Size = new Size(0, 20);
-            lblGene3Allele2.TabIndex = 12;
-            // 
-            // lblGene3Allele1
-            // 
-            lblGene3Allele1.AutoSize = true;
-            lblGene3Allele1.Location = new Point(278, 232);
-            lblGene3Allele1.Name = "lblGene3Allele1";
-            lblGene3Allele1.Size = new Size(0, 20);
-            lblGene3Allele1.TabIndex = 11;
-            // 
-            // lblGene2Allele2
-            // 
-            lblGene2Allele2.AutoSize = true;
-            lblGene2Allele2.Location = new Point(205, 272);
-            lblGene2Allele2.Name = "lblGene2Allele2";
-            lblGene2Allele2.Size = new Size(0, 20);
-            lblGene2Allele2.TabIndex = 10;
-            // 
-            // lblGene2Allele1
-            // 
-            lblGene2Allele1.AutoSize = true;
-            lblGene2Allele1.Location = new Point(205, 232);
-            lblGene2Allele1.Name = "lblGene2Allele1";
-            lblGene2Allele1.Size = new Size(0, 20);
-            lblGene2Allele1.TabIndex = 9;
-            // 
-            // lblGene1Allele2
-            // 
-            lblGene1Allele2.AutoSize = true;
-            lblGene1Allele2.Location = new Point(118, 272);
-            lblGene1Allele2.Name = "lblGene1Allele2";
-            lblGene1Allele2.Size = new Size(0, 20);
-            lblGene1Allele2.TabIndex = 8;
-            // 
-            // lblGene1Allele1
-            // 
-            lblGene1Allele1.AutoSize = true;
-            lblGene1Allele1.Location = new Point(118, 232);
-            lblGene1Allele1.Name = "lblGene1Allele1";
-            lblGene1Allele1.Size = new Size(0, 20);
-            lblGene1Allele1.TabIndex = 7;
-            // 
-            // lblGene3Name
-            // 
-            lblGene3Name.AutoSize = true;
-            lblGene3Name.Location = new Point(278, 195);
-            lblGene3Name.Name = "lblGene3Name";
-            lblGene3Name.Size = new Size(0, 20);
-            lblGene3Name.TabIndex = 6;
-            // 
-            // lblGene2Name
-            // 
-            lblGene2Name.AutoSize = true;
-            lblGene2Name.Location = new Point(205, 195);
-            lblGene2Name.Name = "lblGene2Name";
-            lblGene2Name.Size = new Size(0, 20);
-            lblGene2Name.TabIndex = 5;
-            // 
-            // lblGene1Name
-            // 
-            lblGene1Name.AutoSize = true;
-            lblGene1Name.Location = new Point(118, 195);
-            lblGene1Name.Name = "lblGene1Name";
-            lblGene1Name.Size = new Size(0, 20);
-            lblGene1Name.TabIndex = 4;
-            // 
             // ListboxChildren
             // 
+            ListboxChildren.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             ListboxChildren.FormattingEnabled = true;
             ListboxChildren.ItemHeight = 20;
             ListboxChildren.Location = new Point(118, 344);
@@ -462,6 +397,7 @@
             // 
             // lblChildSex
             // 
+            lblChildSex.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             lblChildSex.AutoSize = true;
             lblChildSex.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             lblChildSex.Location = new Point(26, 82);
@@ -471,6 +407,7 @@
             // 
             // lblChildName
             // 
+            lblChildName.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             lblChildName.AutoSize = true;
             lblChildName.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             lblChildName.Location = new Point(26, 21);
@@ -480,6 +417,7 @@
             // 
             // PbChildIcon
             // 
+            PbChildIcon.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             PbChildIcon.Location = new Point(228, 21);
             PbChildIcon.Name = "PbChildIcon";
             PbChildIcon.Size = new Size(137, 143);
@@ -492,7 +430,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
             AutoScrollMinSize = new Size(700, 500);
-            ClientSize = new Size(1393, 530);
+            ClientSize = new Size(1393, 549);
             Controls.Add(PnlChildInformation);
             Controls.Add(PnlSettings);
             Controls.Add(PnMain);
@@ -561,22 +499,13 @@
         private Label lblChildSex;
         private Label lblChildName;
         private PictureBox PbChildIcon;
-        private Label lblGeneName;
-        private Label lblAllele2name;
-        private Label lblAllele1name;
-        private Label lblGene3Allele2;
-        private Label lblGene3Allele1;
-        private Label lblGene2Allele2;
-        private Label lblGene2Allele1;
-        private Label lblGene1Allele2;
-        private Label lblGene1Allele1;
-        private Label lblGene3Name;
-        private Label lblGene2Name;
-        private Label lblGene1Name;
         private CheckBox chbSortName;
         private GroupBox gbFilter;
         private RadioButton rbSortFemale;
         private RadioButton rbSortMale;
         private RadioButton rbSortNone;
+        private Label lbAttrsCount;
+        private ComboBox comboxSetAttrsCount;
+        private Label lbChildAttr;
     }
 }

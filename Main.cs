@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using static Essenses_crossing.Main;
 using Microsoft.VisualBasic.ApplicationServices;
+using System.Drawing;
 
 namespace Essenses_crossing
 {
@@ -14,8 +15,10 @@ namespace Essenses_crossing
         public Essence Father;
         public Essence Mother;
         public int Offspringnumber;
+        public int AttrsNamesCount = 2;
 
         public List<Essence> offspring;
+        public List<Essence> filteredList;
         public List<GroupBoxList> GroupBoxListsFather = new List<GroupBoxList>();
         public List<GroupBoxList> GroupBoxListsMother = new List<GroupBoxList>();
 
@@ -44,7 +47,7 @@ namespace Essenses_crossing
 
             ListboxChildren.DisplayMember = "Name";
 
-            SetLblGeneNames();
+            comboxSetAttrsCount.SelectedIndex = AttrsNamesCount;
 
             EnumHandler.MaleNamesList = FillListOfNames("C:/Users/Максим/Desktop/Essenses_crossing/male_names_rus.txt");
             EnumHandler.FemaleNamesList = FillListOfNames("C:/Users/Максим/Desktop/Essenses_crossing/female_names_rus.txt");
@@ -71,27 +74,6 @@ namespace Essenses_crossing
                 Console.WriteLine("Произошла ошибка чтения файла: " + e.Message);
             }
             return names;
-        }
-
-        private void SetLblGeneNames()
-        {
-            lblGene1Name.Text = attrNames[0];
-            lblGene2Name.Text = attrNames[1];
-            lblGene3Name.Text = attrNames[2];
-        }
-        private void SetAllelesNames(Animal_tertiary essence)
-        {
-            if (essence != null)
-            {
-                lblGene1Allele1.Text = essence.Genotype1.ToString(essence.Genotype1.allele1);
-                lblGene1Allele2.Text = essence.Genotype1.ToString(essence.Genotype1.allele2);
-
-                lblGene2Allele1.Text = essence.Genotype2.ToString(essence.Genotype2.allele1);
-                lblGene2Allele2.Text = essence.Genotype2.ToString(essence.Genotype2.allele2);
-
-                lblGene3Allele1.Text = essence.Genotype3.ToString(essence.Genotype3.allele1);
-                lblGene3Allele2.Text = essence.Genotype3.ToString(essence.Genotype3.allele2);
-            }
         }
 
         private void UpdateFather()
@@ -129,7 +111,28 @@ namespace Essenses_crossing
 
                 geneList.Add(new Gene(allele1, allele2, groupBoxList.GroupBox.Text));
             }
-            return new Animal_tertiary(name, sex, geneList[0], geneList[1], geneList[2]);
+
+            Essence parent = null;
+
+            switch (AttrsNamesCount)
+            {
+                case 0:
+                    {
+                        parent = new Animal(name, sex, geneList[0]);
+                    }
+                    break;
+                case 1:
+                    {
+                        parent = new Animal_secondary(name, sex, geneList[0], geneList[1]);
+                    }
+                    break;
+                case 2:
+                    {
+                        parent = new Animal_tertiary(name, sex, geneList[0], geneList[1], geneList[2]);
+                    }
+                    break;
+            }
+            return parent;
         }
 
         private void SetLabelValues()
@@ -159,9 +162,10 @@ namespace Essenses_crossing
 
         void CreateGenesControls(FlowLayoutPanel flppanel)
         {
+            flppanel.Controls.Clear();
             if (flppanel != null)
                 flppanel.Controls.Clear();
-            for (int i = 0; i < attrNames.Count; ++i)
+            for (int i = 0; i < AttrsNamesCount + 1; ++i)
             {
                 Point locPoint = new Point(10, 20);
                 Random random = new();
@@ -184,6 +188,48 @@ namespace Essenses_crossing
                 }
 
                 groupBox.GroupBox.Parent = flppanel;
+            }
+        }
+
+        private void UpdateListBox()
+        {
+            if (offspring != null)
+            {
+
+                if (rbSortMale.Checked)
+                {
+                    filteredList = offspring.Where(child => child.sex == Sex.Male).ToList();
+                }
+                else if (rbSortFemale.Checked)
+                {
+                    filteredList = offspring.Where(child => child.sex == Sex.Female).ToList();
+                }
+                else if (rbSortNone.Checked)
+                {
+                    filteredList = offspring.ToList();
+                }
+                else
+                {
+                    filteredList = offspring.ToList();
+                }
+
+                if (chbSortName.Checked)
+                {
+                    filteredList = filteredList.OrderBy(child => child.Name).ToList();
+                }
+
+                ListboxChildren.Items.Clear();
+
+                PbImagesOfChildren.Refresh();
+                PbImagesOfChildren.Controls.Clear();
+
+                foreach (var child in filteredList)
+                {
+                    ListboxChildren.Items.Add(child);
+                    child.Draw(PbImagesOfChildren, _CurrentPositionPoint, Essence.size);
+                    OffsetCurrentPositionPoint(child.Name);
+                }
+                ResetCurrentPositionPoint();
             }
         }
 
@@ -215,12 +261,12 @@ namespace Essenses_crossing
             PbImagesOfChildren.Controls.Clear();
             ListboxChildren.Items.Clear();
             offspring = Father.Breed(Mother, Offspringnumber);
-
+            filteredList = offspring;
             for (int i = 0; i < Offspringnumber; i++)
             {
-                offspring[i].Draw(PbImagesOfChildren, _CurrentPositionPoint, Essence.size);
-                ListboxChildren.Items.Add(offspring[i]);
-                OffsetCurrentPositionPoint(offspring[i].Name);
+                filteredList[i].Draw(PbImagesOfChildren, _CurrentPositionPoint, Essence.size);
+                ListboxChildren.Items.Add(filteredList[i]);
+                OffsetCurrentPositionPoint(filteredList[i].Name);
             }
             ResetCurrentPositionPoint();
 
@@ -234,10 +280,10 @@ namespace Essenses_crossing
 
         private void BtSetSettings_Click(object sender, EventArgs e)
         {
-            PnlSettings.Visible = false;
-            PnMain.Visible = true;
             UpdateFather();
             UpdateMother();
+            PnlSettings.Visible = false;
+            PnMain.Visible = true;
             PbImagesOfChildren.Invalidate();
             SetLabelValues();
         }
@@ -248,9 +294,9 @@ namespace Essenses_crossing
             Mother.Draw(PbMotherIcon, _CurrentPositionPoint, Essence.size);
             ResetCurrentPositionPoint();
 
-            if (offspring != null)
+            if (filteredList != null)
             {
-                foreach (Essence child in offspring)
+                foreach (Essence child in filteredList)
                 {
                     child.Draw(PbImagesOfChildren, _CurrentPositionPoint, Essence.size);
                     OffsetCurrentPositionPoint(child.Name);
@@ -272,14 +318,13 @@ namespace Essenses_crossing
 
         private void ListboxChildren_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Animal_tertiary selectedChild = (Animal_tertiary)ListboxChildren.SelectedItem;
-            if (selectedChild != null)
+            PbChildIcon.Image = filteredList[(int)ListboxChildren.SelectedIndex].EssenceIcon;
+            if (filteredList[(int)ListboxChildren.SelectedIndex] != null)
             {
-                PbChildIcon.Image = selectedChild.EssenceIcon;
-                lblChildName.Text = selectedChild.Name;
-                lblChildSex.Text = selectedChild.ToStringSex();
-                SetAllelesNames(selectedChild);
+                lblChildName.Text = filteredList[(int)ListboxChildren.SelectedIndex].Name;
+                lblChildSex.Text = filteredList[(int)ListboxChildren.SelectedIndex].ToStringSex();
             }
+            lbChildAttr.Text = filteredList[ListboxChildren.SelectedIndex].ToString();
         }
 
         private void rbSortMale_CheckedChanged(object sender, EventArgs e)
@@ -296,41 +341,47 @@ namespace Essenses_crossing
         {
             UpdateListBox();
         }
-        private void UpdateListBox()
+
+
+        private void comboxSetAttrsCount_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (offspring != null)
+            AttrsNamesCount = comboxSetAttrsCount.SelectedIndex;
+            GroupBoxListsFather.Clear();
+            GroupBoxListsMother.Clear();
+            CreateGenesControls(FlpControlFather);
+            CreateGenesControls(FlpControlMother);
+        }
+
+        private void PbImagesOfChildren_MouseClick(object sender, MouseEventArgs e)
+        {
+
+            int xsum = 2 + Essence.size + 15;
+            int ysum = 2 + Essence.size + 15;
+            int X = e.Location.X;
+            int Y = e.Location.Y;
+            int i = 0;
+            int j = 0;
+            int multiplyer = PbImagesOfChildren.Width / (Essence.size + 15);
+            while (xsum < X)
             {
-                List<Essence> filteredList = new List<Essence>();
-                if (rbSortMale.Checked)
-                {
-                    filteredList = offspring.Where(child => child.sex == Sex.Male).ToList();
-                }
-                else if (rbSortFemale.Checked)
-                {
-                    filteredList = offspring.Where(child => child.sex == Sex.Female).ToList();
-                }
-                else if (rbSortNone.Checked)
-                {
-                    filteredList = offspring.ToList();
-                }
-                else
-                {
-                    filteredList = offspring.ToList();
-                }
-                if (chbSortName.Checked)
-                {
-                    filteredList = filteredList.OrderBy(child => child.Name).ToList();
-                }
-                ListboxChildren.Items.Clear();
-
-                foreach (var child in filteredList)
-                {
-                    ListboxChildren.Items.Add(child);
-                }
+                xsum += Essence.size + 15;
+                i++;
             }
-
+            while (ysum < Y)
+            {
+                ysum += Essence.size + 15;
+                j++;
+            }
+            PbChildIcon.Refresh();
+            filteredList[j * multiplyer + i].Draw(PbChildIcon, new Point(4, 4), Essence.size);
+            PbChildIcon.Controls.Clear();
+            lblChildName.Text = filteredList[j * multiplyer + i].Name;
+            lblChildSex.Text = filteredList[j * multiplyer + i].ToStringSex();
+            lbChildAttr.Text = filteredList[j * multiplyer + i].ToString();
+            ListboxChildren.SelectedItem = filteredList[j * multiplyer + i];
         }
     }
+
     public static class EnumHandler
     {
         public static List<string> MaleNamesList = new List<string>();

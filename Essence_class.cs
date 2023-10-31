@@ -69,6 +69,11 @@ namespace Essenses_crossing
 
             return new Gene(allele1, allele2, gen1._name);
         }
+
+        public override string ToString()
+        {
+            return _name + ": " + ToString(allele1) + " " + ToString(allele2);
+        }
     }
 
     public class Phenotype
@@ -195,6 +200,10 @@ namespace Essenses_crossing
             return sex == Sex.Male ? "Male" : "Female";
         }
         protected abstract Essence Child(Essence partner, string name, Sex pSex);
+        public override string ToString()
+        {
+            return "";
+        }
     }
 
     public class Animal : Essence
@@ -218,6 +227,11 @@ namespace Essenses_crossing
             Gene childGen = this.Genotype1 + (partner as Animal).Genotype1;
             Essence child = new Animal(name, sex, childGen);
             return child;
+        }
+
+        public override string ToString()
+        {
+            return "\r\n" + Genotype1.ToString();
         }
     }
 
@@ -249,6 +263,11 @@ namespace Essenses_crossing
             Essence child = new Animal_secondary(name, sex, childGen1, childGen2);
             return child;
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\r\n" + Genotype2.ToString();
+        }
     }
 
     public class Animal_tertiary : Animal_secondary
@@ -278,6 +297,11 @@ namespace Essenses_crossing
             Gene childGen3 = this.Genotype3 + (partner as Animal_tertiary).Genotype3;
             Essence child = new Animal_tertiary(name, sex, childGen1, childGen2, childGen3);
             return child;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\r\n" + Genotype3.ToString();
         }
     }
 }
